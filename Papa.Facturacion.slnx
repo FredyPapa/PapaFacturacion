@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/00. Database/" />
+  <Folder Name="/01. DataAccess/" />
+  <Folder Name="/02. Repositories/" />
+  <Folder Name="/03. Business/" />
+  <Folder Name="/04. Common/" />
+  <Folder Name="/05. Presentation/" />
+  <Folder Name="/Deploy/" />
+  <Project Path="Papa.Facturacion.DataAccess/Papa.Facturacion.DataAccess.csproj" />
+</Solution>
