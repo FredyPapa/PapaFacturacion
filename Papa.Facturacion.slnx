@@ -1,10 +1,21 @@
 <Solution>
   <Folder Name="/00. Database/" />
-  <Folder Name="/01. DataAccess/" />
-  <Folder Name="/02. Repositories/" />
-  <Folder Name="/03. Business/" />
-  <Folder Name="/04. Common/" />
-  <Folder Name="/05. Presentation/" />
+  <Folder Name="/01. DataAccess/">
+    <Project Path="Papa.Facturacion.DataAccess/Papa.Facturacion.DataAccess.csproj" />
+    <Project Path="Papa.Facturacion.Entities/Papa.Facturacion.Entities.csproj" />
+  </Folder>
+  <Folder Name="/02. Repositories/">
+    <Project Path="Papa.Facturacion.Repositories/Papa.Facturacion.Repositories.csproj" />
+  </Folder>
+  <Folder Name="/03. Business/">
+    <Project Path="Papa.Facturacion.Business/Papa.Facturacion.Business.csproj" />
+  </Folder>
+  <Folder Name="/04. Common/">
+    <Project Path="Papa.Facturacion.Dto/Papa.Facturacion.Dto.csproj" />
+    <Project Path="Papa.Facturacion.Utils/Papa.Facturacion.Utils.csproj" />
+  </Folder>
+  <Folder Name="/05. Presentation/">
+    <Project Path="Papa.Facturacion.UI/Papa.Facturacion.UI.csproj" />
+  </Folder>
   <Folder Name="/Deploy/" />
-  <Project Path="Papa.Facturacion.DataAccess/Papa.Facturacion.DataAccess.csproj" />
 </Solution>
