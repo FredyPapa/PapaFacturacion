@@ -62,4 +62,23 @@
     <Folder Include="DDL\Schemas" />
     <Folder Include="DDL\Secuence" />
   </ItemGroup>
+  <ItemGroup>
+    <Build Include="DDL\Schemas\sch_maestro.sql" />
+    <Build Include="DDL\Schemas\sch_facturacion.sql" />
+    <Build Include="DDL\Secuence\seq_catalogo.sql" />
+    <Build Include="DDL\Secuence\seq_catalogo_detalle.sql" />
+    <Build Include="DDL\Secuence\seq_productos.sql" />
+    <Build Include="DDL\Secuence\seq_clientes.sql" />
+    <Build Include="DDL\Secuence\seq_comprobantes.sql" />
+    <Build Include="DDL\Secuence\seq_comprobantes_detalle.sql" />
+    <Build Include="DDL\Tables\Catalogo.sql" />
+    <Build Include="DDL\Tables\CatalogoDetalle.sql" />
+    <Build Include="DDL\Tables\Producto.sql" />
+    <Build Include="DDL\Tables\Cliente.sql" />
+    <Build Include="DDL\Tables\Comprobante.sql" />
+    <Build Include="DDL\Tables\ComprobanteDetalle.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="DML\RegistroCatalogo.sql" />
+  </ItemGroup>
 </Project>

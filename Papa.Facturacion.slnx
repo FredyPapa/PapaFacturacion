@@ -1,5 +1,10 @@
 <Solution>
-  <Folder Name="/00. Database/" />
+  <Folder Name="/00. Database/">
+    <Project Path="Papa.Facturacion.Database/Papa.Facturacion.Database.sqlproj" Id="58e31af9-8f99-4e82-a4ea-c83dd2ea58c8">
+      <Build />
+      <Deploy />
+    </Project>
+  </Folder>
   <Folder Name="/01. DataAccess/">
     <Project Path="Papa.Facturacion.DataAccess/Papa.Facturacion.DataAccess.csproj" />
     <Project Path="Papa.Facturacion.Entities/Papa.Facturacion.Entities.csproj" />
@@ -17,5 +22,7 @@
   <Folder Name="/05. Presentation/">
     <Project Path="Papa.Facturacion.UI/Papa.Facturacion.UI.csproj" />
   </Folder>
-  <Folder Name="/Deploy/" />
+  <Folder Name="/Deploy/">
+    <File Path="docker-compose.yml" />
+  </Folder>
 </Solution>

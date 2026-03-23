@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Papa.Facturacion.DataAccess.Context;
 using Papa.Facturacion.UI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+//DbContext
+builder.Services.AddDbContext<PapaFacturacionContext>(opt =>
+{
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("cnFacturacion"));
+});
 
 var app = builder.Build();
 
