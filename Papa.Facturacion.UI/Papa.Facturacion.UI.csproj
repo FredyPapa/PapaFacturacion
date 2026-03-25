@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Papa.Facturacion.DataAccess\Papa.Facturacion.DataAccess.csproj" />
+    <ProjectReference Include="..\Papa.Facturacion.Repositories\Papa.Facturacion.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

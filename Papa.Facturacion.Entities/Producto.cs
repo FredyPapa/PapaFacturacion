@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Papa.Facturacion.Entities;
+using System;
 using System.Collections.Generic;
 
-namespace Papa.Facturacion.Entities;
+namespace Papa.Facturacion.DataAccess;
 
-public partial class Producto
+public partial class Producto : BaseEntity
 {
-    public int IProducto { get; set; }
-
     public string VNombre { get; set; } = null!;
 
     public string VDescripcion { get; set; } = null!;
@@ -20,16 +19,6 @@ public partial class Producto
     public decimal DcPrecioUnitario { get; set; }
 
     public int IStock { get; set; }
-
-    public bool BEstado { get; set; }
-
-    public int IUsuarioCreacion { get; set; }
-
-    public DateTime DFechaCreacion { get; set; }
-
-    public int? IUsuarioModificacion { get; set; }
-
-    public DateTime? DFechaModificacion { get; set; }
 
     public virtual ICollection<ComprobanteDetalle> ComprobanteDetalles { get; set; } = new List<ComprobanteDetalle>();
 

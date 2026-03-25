@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Papa.Facturacion.DataAccess.Context;
+using Papa.Facturacion.Repositories.Implementations;
+using Papa.Facturacion.Repositories.Interfaces;
 using Papa.Facturacion.UI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,9 @@ builder.Services.AddDbContext<PapaFacturacionContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("cnFacturacion"));
 });
+
+//Inyección de dependencia
+builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
 
 var app = builder.Build();
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Papa.Facturacion.Entities;
 
 namespace Papa.Facturacion.DataAccess.Context;
 
@@ -28,19 +27,20 @@ public partial class PapaFacturacionContext : DbContext
 
     public virtual DbSet<Producto> Productos { get; set; }
 
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Catalogo>(entity =>
         {
-            entity.HasKey(e => e.ICatalogo).HasName("PK__Catalogo__0AB5B5A5CA15FCD9");
+            entity.HasKey(e => e.IId).HasName("PK__Catalogo__0AB5B5A5CA15FCD9");
 
             entity.ToTable("Catalogo", "sch_maestro");
 
             entity.HasIndex(e => e.VCodigo, "UQ__Catalogo__78E9250EC9B52749").IsUnique();
 
-            entity.Property(e => e.ICatalogo)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_catalogo])")
-                .HasColumnName("iCatalogo");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");
@@ -71,15 +71,15 @@ public partial class PapaFacturacionContext : DbContext
 
         modelBuilder.Entity<CatalogoDetalle>(entity =>
         {
-            entity.HasKey(e => e.ICatalogoDetalle).HasName("PK__Catalogo__8A2462EC743B7446");
+            entity.HasKey(e => e.IId).HasName("PK__Catalogo__8A2462EC743B7446");
 
             entity.ToTable("CatalogoDetalle", "sch_maestro");
 
             entity.HasIndex(e => e.VCodigo, "UQ__Catalogo__78E9250E49813D6E").IsUnique();
 
-            entity.Property(e => e.ICatalogoDetalle)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_catalogo_detalle])")
-                .HasColumnName("iCatalogoDetalle");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");
@@ -112,13 +112,13 @@ public partial class PapaFacturacionContext : DbContext
 
         modelBuilder.Entity<Cliente>(entity =>
         {
-            entity.HasKey(e => e.ICliente).HasName("PK__Cliente__02838A5EAFE3D02A");
+            entity.HasKey(e => e.IId).HasName("PK__Cliente__02838A5EAFE3D02A");
 
             entity.ToTable("Cliente", "sch_facturacion");
 
-            entity.Property(e => e.ICliente)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_clientes])")
-                .HasColumnName("iCliente");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");
@@ -173,13 +173,13 @@ public partial class PapaFacturacionContext : DbContext
 
         modelBuilder.Entity<Comprobante>(entity =>
         {
-            entity.HasKey(e => e.IComprobante).HasName("PK__Comproba__18E73436631A135D");
+            entity.HasKey(e => e.IId).HasName("PK__Comproba__18E73436631A135D");
 
             entity.ToTable("Comprobante", "sch_facturacion");
 
-            entity.Property(e => e.IComprobante)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_comprobantes])")
-                .HasColumnName("iComprobante");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");
@@ -226,13 +226,13 @@ public partial class PapaFacturacionContext : DbContext
 
         modelBuilder.Entity<ComprobanteDetalle>(entity =>
         {
-            entity.HasKey(e => e.IComprobanteDetalle).HasName("PK__Comproba__632E8AC6BE4D87B7");
+            entity.HasKey(e => e.IId).HasName("PK__Comproba__632E8AC6BE4D87B7");
 
             entity.ToTable("ComprobanteDetalle", "sch_facturacion");
 
-            entity.Property(e => e.IComprobanteDetalle)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_comprobantes_detalle])")
-                .HasColumnName("iComprobanteDetalle");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");
@@ -272,13 +272,13 @@ public partial class PapaFacturacionContext : DbContext
 
         modelBuilder.Entity<Producto>(entity =>
         {
-            entity.HasKey(e => e.IProducto).HasName("PK__Producto__252C106A1FA22924");
+            entity.HasKey(e => e.IId).HasName("PK__Producto__252C106A1FA22924");
 
             entity.ToTable("Producto", "sch_facturacion");
 
-            entity.Property(e => e.IProducto)
+            entity.Property(e => e.IId)
                 .HasDefaultValueSql("(NEXT VALUE FOR [seq_productos])")
-                .HasColumnName("iProducto");
+                .HasColumnName("iId");
             entity.Property(e => e.BEstado)
                 .HasDefaultValue(true)
                 .HasColumnName("bEstado");

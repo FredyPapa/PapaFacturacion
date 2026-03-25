@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Papa.Facturacion.Entities;
+using System;
 using System.Collections.Generic;
 
-namespace Papa.Facturacion.Entities;
+namespace Papa.Facturacion.DataAccess;
 
-public partial class Cliente
+public partial class Cliente : BaseEntity
 {
-    public int ICliente { get; set; }
 
     public int ITipoDocumentoCat { get; set; }
 
@@ -22,16 +22,6 @@ public partial class Cliente
     public string? VCorreoElectronico { get; set; }
 
     public string VCelular { get; set; } = null!;
-
-    public bool BEstado { get; set; }
-
-    public int IUsuarioCreacion { get; set; }
-
-    public DateTime DFechaCreacion { get; set; }
-
-    public int? IUsuarioModificacion { get; set; }
-
-    public DateTime? DFechaModificacion { get; set; }
 
     public virtual ICollection<Comprobante> Comprobantes { get; set; } = new List<Comprobante>();
 

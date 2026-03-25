@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Papa.Facturacion.Entities;
+using System;
 using System.Collections.Generic;
 
-namespace Papa.Facturacion.Entities;
+namespace Papa.Facturacion.DataAccess;
 
-public partial class Catalogo
+public partial class Catalogo : BaseEntity
 {
-    public int ICatalogo { get; set; }
 
     public string VCodigo { get; set; } = null!;
 
@@ -13,15 +13,6 @@ public partial class Catalogo
 
     public string? VDescripcion { get; set; }
 
-    public bool BEstado { get; set; }
-
-    public int IUsuarioCreacion { get; set; }
-
-    public DateTime DFechaCreacion { get; set; }
-
-    public int? IUsuarioModificacion { get; set; }
-
-    public DateTime? DFechaModificacion { get; set; }
 
     public virtual ICollection<CatalogoDetalle> CatalogoDetalles { get; set; } = new List<CatalogoDetalle>();
 }

@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [sch_facturacion].[Comprobante]
 (
-	[iComprobante] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR seq_comprobantes,  
+	[iId] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR seq_comprobantes,  
     [iTipoComprobanteCat] INT NOT NULL,
     [iTipoPagoCat] INT NOT NULL,
     [iCliente] INT NOT NULL,
@@ -12,7 +12,7 @@
     [dFechaCreacion] DATETIME NOT NULL DEFAULT Getdate(), 
     [iUsuarioModificacion] INT NULL, 
     [dFechaModificacion] DATETIME NULL,
-    CONSTRAINT [FK_Comprobante_ToTipoComprobante] FOREIGN KEY ([iTipoComprobanteCat]) REFERENCES sch_maestro.CatalogoDetalle(iCatalogoDetalle),
-    CONSTRAINT [FK_Comprobante_ToTipoPago] FOREIGN KEY ([iTipoPagoCat]) REFERENCES sch_maestro.CatalogoDetalle(iCatalogoDetalle),
-    CONSTRAINT [FK_Comprobante_ToCliente] FOREIGN KEY ([iCliente]) REFERENCES sch_facturacion.Cliente(iCliente)
+    CONSTRAINT [FK_Comprobante_ToTipoComprobante] FOREIGN KEY ([iTipoComprobanteCat]) REFERENCES sch_maestro.CatalogoDetalle([iId]),
+    CONSTRAINT [FK_Comprobante_ToTipoPago] FOREIGN KEY ([iTipoPagoCat]) REFERENCES sch_maestro.CatalogoDetalle([iId]),
+    CONSTRAINT [FK_Comprobante_ToCliente] FOREIGN KEY ([iCliente]) REFERENCES sch_facturacion.Cliente([iId])
 )

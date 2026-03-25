@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Papa.Facturacion.DataAccess\Papa.Facturacion.DataAccess.csproj" />
+    <ProjectReference Include="..\Papa.Facturacion.Entities\Papa.Facturacion.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

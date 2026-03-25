@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [sch_facturacion].[Cliente]
 (
-	[iCliente] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR seq_clientes, 
+	[iId] INT NOT NULL PRIMARY KEY DEFAULT NEXT VALUE FOR seq_clientes, 
     [iTipoDocumentoCat] INT NOT NULL, 
     [vNumeroDocumento] CHAR(12) NOT NULL, 
     [vApellidoPaterno] VARCHAR(80) NOT NULL, 
@@ -14,5 +14,5 @@
     [dFechaCreacion] DATETIME NOT NULL DEFAULT Getdate(), 
     [iUsuarioModificacion] INT NULL, 
     [dFechaModificacion] DATETIME NULL,
-    CONSTRAINT [FK_Cliente_ToTipoDocumento] FOREIGN KEY (iTipoDocumentoCat) REFERENCES sch_maestro.CatalogoDetalle(iCatalogoDetalle),
+    CONSTRAINT [FK_Cliente_ToTipoDocumento] FOREIGN KEY (iTipoDocumentoCat) REFERENCES sch_maestro.CatalogoDetalle([iId]),
 )
