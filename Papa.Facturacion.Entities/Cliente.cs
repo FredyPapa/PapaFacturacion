@@ -6,7 +6,6 @@ namespace Papa.Facturacion.DataAccess;
 
 public partial class Cliente : BaseEntity
 {
-
     public int ITipoDocumentoCat { get; set; }
 
     public string VNumeroDocumento { get; set; } = null!;

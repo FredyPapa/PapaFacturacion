@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Papa.Facturacion.Business.Implementations;
+using Papa.Facturacion.Business.Interfaces;
 using Papa.Facturacion.DataAccess.Context;
 using Papa.Facturacion.Repositories.Implementations;
 using Papa.Facturacion.Repositories.Interfaces;
@@ -18,6 +20,13 @@ builder.Services.AddDbContext<PapaFacturacionContext>(opt =>
 
 //Inyección de dependencia
 builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
+builder.Services.AddScoped<ICatalogoDetalleRepository, CatalogoDetalleRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<IComprobanteRepository, ComprobanteRepository>();
+builder.Services.AddScoped<IComprobanteDetalleRepository, ComprobanteDetalleRepository>();
+//
+builder.Services.AddScoped<IClienteService, ClienteService>();
 
 var app = builder.Build();
 

@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Papa.Facturacion.Business\Papa.Facturacion.Business.csproj" />
     <ProjectReference Include="..\Papa.Facturacion.DataAccess\Papa.Facturacion.DataAccess.csproj" />
+    <ProjectReference Include="..\Papa.Facturacion.Dto\Papa.Facturacion.Dto.csproj" />
     <ProjectReference Include="..\Papa.Facturacion.Repositories\Papa.Facturacion.Repositories.csproj" />
   </ItemGroup>
 
