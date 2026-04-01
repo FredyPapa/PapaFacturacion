@@ -1,30 +1,192 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Papa.Facturacion.UI</a>
+﻿@inject NavigationManager Navegador
+<nav class="navbar">
+    <div class="logo_item">
+        <i class="bx bx-menu" id="sidebarOpen"></i>
+        <img src="icon.png" alt="">
+        <span class="title_page">Pedidos</span>
+    </div>
+
+    <div class="navbar_content">
+        <i class='bx bx-sun' id="darkLight"></i>
+        <i class='bx bx-bell' id="notificationBtn"></i>
+        <img src="user.png" alt="" class="profile" id="profileBtn" />
+    </div>
+</nav>
+
+<!-- ================= PERFIL ================= -->
+<div id="profileMenu" class="profile-menu hidden">
+    <div class="flex flex-col items-center text-center">
+        <img src="user.png"
+             class="w-20 h-20 rounded-full border-4 border-gray-300 shadow-md">
+
+        <div class="w-full mt-4 text-sm">
+            <p class="mb-1">
+                <i class="bi bi-person-badge-fill"></i> Administrador
+            </p>
+            <p class="mb-1">
+                <i class="bi bi-person-vcard-fill"></i> Juan Carlos
+            </p>
+            <p class="mb-1">
+                <i class="bi bi-calendar-date"></i> @DateTime.Now.ToShortDateString()
+            </p>
+            <p class="mb-1">
+                <i class="bi bi-house"></i> Oficina Principal
+            </p>
+        </div>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<!-- ================= NOTIFICACIONES ================= -->
+<div id="notificationMenu" class="notification-menu hidden">
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+    <div class="notification-card unread">
+        <div>
+            <p class="font-semibold">Solicitud de ayuda</p>
+            <p class="text-sm text-gray-600">
+                Tienes una solicitud pendiente
+            </p>
         </div>
+        <i class="bi bi-bell-fill icon"></i>
+    </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
+    <div class="notification-card unread">
+        <div>
+            <p class="font-semibold">Sistema</p>
+            <p class="text-sm text-gray-600">
+                Actualización disponible
+            </p>
         </div>
+        <i class="bi bi-bell-fill icon"></i>
+    </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
 </div>
 
+<!-- ================= SIDEBAR ================= -->
+<nav class="sidebar">
+    <div class="menu_content">
+
+        <!-- ===== GESTIÓN ===== -->
+        <ul class="menu_items">
+            <div class="menu_title" data-title="Principal"></div>
+
+            <li class="item">
+                <a href="/maintenance/clients" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-user"></i>
+                    </span>
+                    <span class="navlink">Clientes</span>
+                </a>
+            </li>
+
+            <li class="item">
+                <a href="RoutesMenu.ListProduct" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-border-all"></i>
+                    </span>
+                    <span class="navlink">Productos</span>
+                </a>
+            </li>
+
+            <li class="item">
+                <a href="RoutesMenu.ListOrder" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-cart"></i>
+                    </span>
+                    <span class="navlink">Pedidos</span>
+                </a>
+            </li>
+
+            <li class="item">
+                <div class="nav_link submenu_item"
+                     @onclick='() => ToggleSubMenu("reportes")'>
+
+                    <span class="navlink_icon">
+                        <i class="bx bx-bar-chart"></i>
+                    </span>
+                    <span class="navlink">Reportes</span>
+                    <i class="bx bx-chevron-right @(IsMenuOpen("reportes") ? "rotated" : "")"></i>
+                </div>
+
+                <ul class="menu_items submenu"
+                    style="@(IsMenuOpen("reportes") ? "display:block;" : "display:none;")">
+
+                    <a href="/reportes/ventas" class="nav_link sublink">Ventas</a>
+                    <a href="/reportes/inventario" class="nav_link sublink">Inventario</a>
+
+                </ul>
+            </li>
+        </ul>
+
+        <!-- ===== SEGURIDAD ===== -->
+        <ul class="menu_items">
+            <div class="menu_title" data-title="Seguridad"></div>
+
+            <li class="item">
+                <a href="/roles" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-lock"></i>
+                    </span>
+                    <span class="navlink">Roles</span>
+                </a>
+            </li>
+
+            <li class="item">
+                <a href="/permisos" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-shield"></i>
+                    </span>
+                    <span class="navlink">Permisos</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- ===== CERRAR SESIÓN ===== -->
+        <ul class="menu_items">
+            <li class="item item-seleccionado" @onclick="CerrarSesion">
+                <a class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-log-out"></i>
+                    </span>
+                    <span class="navlink">Cerrar Sesión</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- ===== FOOTER SIDEBAR ===== -->
+        <div class="bottom_content">
+            <div class="bottom expand_sidebar">
+                <span>Abrir</span>
+                <i class='bx bx-log-in'></i>
+            </div>
+            <div class="bottom collapse_sidebar">
+                <span>Cerrar</span>
+                <i class='bx bx-log-out'></i>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+@code {
+
+    private HashSet<string> openedMenus = new();
+
+    private void ToggleSubMenu(string menuId)
+    {
+        if (openedMenus.Contains(menuId))
+            openedMenus.Remove(menuId);
+        else
+        {
+            openedMenus.Clear();
+            openedMenus.Add(menuId);
+        }
+    }
+
+    private bool IsMenuOpen(string menuId)
+        => openedMenus.Contains(menuId);
+
+    private void CerrarSesion()
+    {
+        Navegador.NavigateTo("/login");
+    }
+}

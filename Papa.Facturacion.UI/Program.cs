@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 using Papa.Facturacion.Business.Implementations;
 using Papa.Facturacion.Business.Interfaces;
@@ -26,8 +27,16 @@ builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IComprobanteRepository, ComprobanteRepository>();
 builder.Services.AddScoped<IComprobanteDetalleRepository, ComprobanteDetalleRepository>();
 //
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
+builder.Services.AddScoped<ICatalogoDetalleService, CatalogoDetalleService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
-
+builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IComprobanteService, ComprobanteService>();
+builder.Services.AddScoped<IComprobanteDetalleService, ComprobanteDetalleService>();
+//
+builder.Services.AddBlazorBootstrap();
+builder.Services.AddBlazoredToast();
+//
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
