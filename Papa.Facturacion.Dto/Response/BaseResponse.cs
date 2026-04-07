@@ -8,7 +8,7 @@ namespace Papa.Facturacion.Dto.Response
     {
         public string? Message { get; set; }
         public string? ErrorCode { get; set; }
-        public bool? IsSuccess { get; set; }
+        public bool IsSuccess { get; set; }
     }
 
     public class BaseResponse<T> : BaseResponse
