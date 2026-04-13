@@ -13,6 +13,7 @@ namespace Papa.Facturacion.Business.Interfaces
         Task<BaseResponse> AddAsync(CreateCatalogoDetalleRequest request);
         Task<BaseResponse> UpdateAsync(int id, UpdateCatalogoDetalleRequest request);
         Task<BaseResponse<GetCatalogoDetalleResponse>> GetByIdAsync(int id);
+        Task<BaseResponse<List<ListCatalogoDetalleByCodigoResponse>>> ListAsync(List<string> listCodigos);
         Task<PagedResponse<ListCatalogoDetalleResponse>> ListAsync(SearchListRequest request);
         Task<BaseResponse> DeleteAsync(int id);
     }

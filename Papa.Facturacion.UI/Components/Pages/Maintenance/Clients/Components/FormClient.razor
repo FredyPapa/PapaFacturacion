@@ -1,0 +1,81 @@
+﻿﻿@using Papa.Facturacion.Dto.Request.Cliente
+@using Papa.Facturacion.Dto.Response.CatalogoDetalle
+
+<EditForm Model="Request" FormName="ClientForm" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Tipo de documento</label>
+            <select class="form-select form-select-sm" @bind="Request.ITipoDocumentoCat">
+                <option value="0">-Seleccione-</option>
+                @foreach (var item in ListTipoDoc)
+                {
+                    <option value="@item.Id">@item.Valor</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => Request.ITipoDocumentoCat)" />
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Número de documento</label>
+            <input class="form-control form-control-sm" @bind="Request.VNumeroDocumento" />
+            <ValidationMessage For="@(() => Request.VNumeroDocumento)" />
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Apellido paterno</label>
+            <input class="form-control form-control-sm" @bind="Request.VApellidoPaterno" />
+            <ValidationMessage For="@(() => Request.VApellidoPaterno)" />
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Apellido materno</label>
+            <input class="form-control form-control-sm" @bind="Request.VApellidoMaterno" />
+            <ValidationMessage For="@(() => Request.VApellidoMaterno)" />
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Nombres</label>
+            <input class="form-control form-control-sm" @bind="Request.VNombres" />
+            <ValidationMessage For="@(() => Request.VNombres)" />
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 mt-2">
+            <label>Dirección</label>
+            <input class="form-control form-control-sm" @bind="Request.VDireccion" />
+            <ValidationMessage For="@(() => Request.VDireccion)" />
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Correo electrónico</label>
+            <input class="form-control form-control-sm" type="email" @bind="Request.VCorreoElectronico" />
+            <ValidationMessage For="@(() => Request.VCorreoElectronico)" />
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Celular</label>
+            <input class="form-control form-control-sm" @bind="Request.VCelular" />
+            <ValidationMessage For="@(() => Request.VCelular)" />
+        </div>
+    </div>
+
+    <div class="row gx-4 mt-4">
+        <div class="col">
+            <button class="btn btn-primary" type="submit"><i class=" bi bi-save"></i> Guardar</button>
+            <a class="btn btn-danger" href="@ComponentRoutes.Clients.List">Cancelar</a>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public ClienteRequest Request { get; set; } = new();
+
+    [Parameter]
+    public List<ListCatalogoDetalleByCodigoResponse> ListTipoDoc { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnSaveEvent { get; set; } = default!;
+
+    public async Task OnSave()
+    {
+        await OnSaveEvent.InvokeAsync();
+    }
+}

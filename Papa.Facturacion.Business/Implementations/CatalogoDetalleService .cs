@@ -99,6 +99,36 @@ namespace Papa.Facturacion.Business.Implementations
             return response;
         }
 
+        //Listar sin paginación
+        public async Task<BaseResponse<List<ListCatalogoDetalleByCodigoResponse>>> ListAsync(List<string> listCodigos)
+        {
+            var response = new BaseResponse<List<ListCatalogoDetalleByCodigoResponse>>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado && listCodigos.Any(l => l == p.ICatalogoNavigation.VCodigo),
+                        selector: p => new ListCatalogoDetalleByCodigoResponse
+                        {
+                            Id = p.IId,
+                            CodigoPadre = p.ICatalogoNavigation.VCodigo,
+                            Codigo = p.VCodigo,
+                            Valor = p.VDescripcion!
+                        },
+                        orderBy: p => p.VDescripcion
+                    );
+
+                response.IsSuccess = true;
+                response.Result = result.ToList();
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Hubo un error al listar los Catalogos.";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
+
         //Listar con paginación
         public async Task<PagedResponse<ListCatalogoDetalleResponse>> ListAsync(SearchListRequest request)
         {

@@ -25,7 +25,7 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Crear
-        public async Task<BaseResponse> AddAsync(CreateClienteRequest request)
+        public async Task<BaseResponse> AddAsync(ClienteRequest request)
         {
             var response = new BaseResponse();
             try
@@ -57,7 +57,7 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Actualizar
-        public async Task<BaseResponse> UpdateAsync(int id,UpdateClienteRequest request)
+        public async Task<BaseResponse> UpdateAsync(int id,ClienteRequest request)
         {
             var response = new BaseResponse();
             try

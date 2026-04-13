@@ -28,7 +28,23 @@ namespace Papa.Facturacion.Repositories.Implementations
             return result;
         }
 
-        //Listado con paginación
+        //Listado con ordenamiento, filtros y sin paginación
+        public async Task<ICollection<TResult>> ListAsync<TResult, Tkey>
+        (
+            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, Tkey>> orderBy
+        )
+        {
+            return await _context.Set<TEntity>()
+                  .Where(predicate)
+                  .AsNoTracking()
+                  .OrderBy(orderBy)
+                  .Select(selector)
+                  .ToListAsync();
+        }
+
+        //Listado con ordenamiento, filtros y paginación
         public async Task<(ICollection<TResult> Result, int TotalRows)> ListAsync<TResult, Tkey>
         (
             Expression<Func<TEntity, bool>> predicate,

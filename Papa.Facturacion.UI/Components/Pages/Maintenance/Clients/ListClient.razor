@@ -60,7 +60,7 @@
                                 <td>@item.CorreoElectronico</td>
                                 <td>@item.Celular</td>
                                 <td>
-                                    <button class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-warning btn-sm" @onclick="() => ToEdit(item.Id)"><i class="bi bi-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>

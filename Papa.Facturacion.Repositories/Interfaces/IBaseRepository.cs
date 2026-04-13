@@ -9,6 +9,12 @@ namespace Papa.Facturacion.Repositories.Interfaces
     public interface IBaseRepository<TEntity> where TEntity : BaseEntity
     {
         Task<ICollection<TEntity>> ListAsync();
+        Task<ICollection<TResult>> ListAsync<TResult, Tkey>
+        (
+            Expression<Func<TEntity, bool>> predicate,
+            Expression<Func<TEntity, TResult>> selector,
+            Expression<Func<TEntity, Tkey>> orderBy
+        );
         Task<(ICollection<TResult> Result, int TotalRows)> ListAsync<TResult, Tkey>
         (
             Expression<Func<TEntity, bool>> predicate,

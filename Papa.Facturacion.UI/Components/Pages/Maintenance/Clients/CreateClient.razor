@@ -1,0 +1,19 @@
+﻿@using Papa.Facturacion.UI.Components.Pages.Maintenance.Clients.Components
+@attribute [Route(ComponentRoutes.Clients.Create)]
+
+<GroupBox Class="mb-4">
+    <Content>
+        <div class="page-header">
+            <h2 class="page-title">Registrar cliente</h2>
+            <span class="page-route">@ComponentRoutes.Clients.Create</span>
+        </div>
+    </Content>
+</GroupBox>
+
+<GroupBox Title="Datos del cliente">
+    <Content>
+        <FormClient ListTipoDoc="ListTipoDoc"
+                    OnSaveEvent="SaveClient"
+                    Request="Request" />
+    </Content>
+</GroupBox>

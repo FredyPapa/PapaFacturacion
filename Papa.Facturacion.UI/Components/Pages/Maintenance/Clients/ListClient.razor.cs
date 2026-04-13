@@ -17,6 +17,9 @@ namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
 
         public SearchListRequest Request { get; set; } = new();
 
+        [Inject]
+        public NavigationManager Navigation { get; set; } = default!;
+
         public ICollection<ListClienteResponse> Response { get; set; } = new List<ListClienteResponse>();
 
         protected override async Task OnInitializedAsync()
@@ -43,5 +46,8 @@ namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
                 Toast.ShowError($"Hubo un error desconcido: {ex.Message}");
             }
         }
+
+        private async Task ToEdit(int id) => Navigation.NavigateTo($"{Common.ComponentRoutes.Clients.Edit}/{id}");
+
     }
 }

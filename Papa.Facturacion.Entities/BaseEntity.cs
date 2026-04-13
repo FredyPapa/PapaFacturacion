@@ -7,11 +7,11 @@ namespace Papa.Facturacion.Entities
     public class BaseEntity
     {
         public int IId { get; set; }
-        public bool BEstado { get; set; }
+        public bool BEstado { get; set; } = true;
 
-        public int IUsuarioCreacion { get; set; }
+        public int IUsuarioCreacion { get; set; } = 1;
 
-        public DateTime DFechaCreacion { get; set; }
+        public DateTime DFechaCreacion { get; set; } = DateTime.Now;
 
         public int? IUsuarioModificacion { get; set; }
 
