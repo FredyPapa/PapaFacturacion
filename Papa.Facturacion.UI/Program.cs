@@ -1,4 +1,4 @@
-using Blazored.Toast;
+using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.EntityFrameworkCore;
 using Papa.Facturacion.Business.Implementations;
 using Papa.Facturacion.Business.Interfaces;
@@ -35,7 +35,7 @@ builder.Services.AddScoped<IComprobanteService, ComprobanteService>();
 builder.Services.AddScoped<IComprobanteDetalleService, ComprobanteDetalleService>();
 //
 builder.Services.AddBlazorBootstrap();
-builder.Services.AddBlazoredToast();
+builder.Services.AddSweetAlert2();
 //
 var app = builder.Build();
 

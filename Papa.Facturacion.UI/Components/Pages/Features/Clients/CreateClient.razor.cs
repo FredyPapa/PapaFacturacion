@@ -1,11 +1,11 @@
-﻿using Blazored.Toast.Services;
+﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Papa.Facturacion.Business.Interfaces;
 using Papa.Facturacion.Dto.Request.Cliente;
 using Papa.Facturacion.Dto.Response.CatalogoDetalle;
 using Papa.Facturacion.UI.Common;
 
-namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
+namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
 {
     public partial class CreateClient
     {
@@ -19,7 +19,10 @@ namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
         private NavigationManager _navigation { get; set; } = default!;
 
         [Inject]
-        private IToastService Toast { get; set; } = default!;
+        private ToastService Toast { get; set; } = default!;
+
+        [Inject]
+        protected PreloadService PreloadService { get; set; } = default!;
 
         private List<ListCatalogoDetalleByCodigoResponse> ListTipoDoc { get; set; } = new();
         public ClienteRequest Request { get; set; } = new();
@@ -31,6 +34,7 @@ namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
 
         private async Task GetCatalogoDetalleAsync()
         {
+            PreloadService.Show(SpinnerColor.Light);
             try
             {
                 var result = await _catalogoDetalleService.ListAsync(new List<string> { "MAE_TD" });
@@ -41,27 +45,43 @@ namespace Papa.Facturacion.UI.Components.Pages.Maintenance.Clients
                 }
                 else
                 {
-                    Toast.ShowError(result.Message);
+                    Toast.Notify(new(ToastType.Warning, result.Message!));
                 }
             }
             catch (Exception ex)
             {
-                Toast.ShowError(ex.Message);
+                Toast.Notify(new(ToastType.Danger, ex.Message));
+            }
+            finally
+            {
+                PreloadService.Hide();
             }
         }
 
         private async Task SaveClient()
         {
-            var result = await _service.AddAsync(Request);
+            PreloadService.Show(SpinnerColor.Light);
+            try
+            {
+                var result = await _service.AddAsync(Request);
 
-            if (result.IsSuccess)
-            {
-                Toast.ShowSuccess("Cliente registrado exitosamente");
-                _navigation.NavigateTo(ComponentRoutes.Clients.List);
+                if (result.IsSuccess)
+                {
+                    Toast.Notify(new(ToastType.Success, "Cliente registrado exitosamente"));
+                    _navigation.NavigateTo(ComponentRoutes.Clients.List);
+                }
+                else
+                {
+                    Toast.Notify(new(ToastType.Warning, result.Message!));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Toast.ShowError(result.Message);
+                Toast.Notify(new(ToastType.Danger, ex.Message));
+            }
+            finally
+            {
+                PreloadService.Hide();
             }
         }
     }

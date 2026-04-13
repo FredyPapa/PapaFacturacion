@@ -1,9 +1,10 @@
-﻿@using Blazored.Toast.Configuration
-﻿@using Microsoft.AspNetCore.Authorization
+﻿﻿@using Microsoft.AspNetCore.Authorization
 @inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
 
-<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.BottomRight" />
+<!--<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.BottomRight" />-->
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.BottomRight" />
+<Preload LoadingText="Cargando..."/>
 
 <div class="page">
     <NavMenu />
