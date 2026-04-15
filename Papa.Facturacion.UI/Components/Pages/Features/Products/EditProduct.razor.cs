@@ -1,14 +1,15 @@
 ﻿using BlazorBootstrap;
+using Mapster;
 using Microsoft.AspNetCore.Components;
 using Papa.Facturacion.Business.Interfaces;
-using Papa.Facturacion.Dto.Request.Cliente;
+using Papa.Facturacion.Dto.Request.Producto;
 using Papa.Facturacion.Dto.Response.CatalogoDetalle;
 using Papa.Facturacion.UI.Common;
 using Papa.Facturacion.Utils;
 
-namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
+namespace Papa.Facturacion.UI.Components.Pages.Features.Products
 {
-    public partial class EditCient
+    public partial class EditProduct
     {
         [Parameter]
         public int id { get; set; }
@@ -17,7 +18,7 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
         private ICatalogoDetalleService _catalogoDetalleService { get; set; } = default!;
 
         [Inject]
-        private IClienteService _service { get; set; } = default!;
+        private IProductoService _service { get; set; } = default!;
 
         [Inject]
         private NavigationManager _navigation { get; set; } = default!;
@@ -28,8 +29,10 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
         [Inject]
         protected PreloadService PreloadService { get; set; } = default!;
 
-        private List<ListCatalogoDetalleByCodigoResponse> ListTipoDoc { get; set; } = new();
-        public ClienteRequest Request { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListLaboratorio { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListCategoria { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListMarca { get; set; } = new();
+        public ProductoRequest Request { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -42,11 +45,13 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             PreloadService.Show(SpinnerColor.Light);
             try
             {
-                var result = await _catalogoDetalleService.ListAsync(new List<string> { CodesCatalog.TIPO_DOCUMENTO });
+                var result = await _catalogoDetalleService.ListAsync(new List<string> { CodesCatalog.LABORATORIO, CodesCatalog.CATEGORIA, CodesCatalog.MARCA });
 
                 if (result.IsSuccess && result.Result != null)
                 {
-                    ListTipoDoc = result.Result.Where(x => x.CodigoPadre == CodesCatalog.TIPO_DOCUMENTO).ToList();
+                    ListLaboratorio = result.Result.Where(x => x.CodigoPadre == CodesCatalog.LABORATORIO).ToList();
+                    ListCategoria = result.Result.Where(x => x.CodigoPadre == CodesCatalog.CATEGORIA).ToList();
+                    ListMarca = result.Result.Where(x => x.CodigoPadre == CodesCatalog.MARCA).ToList();
                 }
                 else
                 {
@@ -72,14 +77,17 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
 
                 if (result.IsSuccess && result.Result != null)
                 {
-                    Request.ITipoDocumentoCat = result.Result.ITipoDocumentoCat;
-                    Request.VNumeroDocumento = result.Result.VNumeroDocumento;
-                    Request.VApellidoPaterno = result.Result.VApellidoPaterno;
-                    Request.VApellidoMaterno = result.Result.VApellidoMaterno;
-                    Request.VNombres = result.Result.VNombres;
-                    Request.VDireccion = result.Result.VDireccion;
-                    Request.VCorreoElectronico = result.Result.VCorreoElectronico;
-                    Request.VCelular = result.Result.VCelular;
+                    var product = result.Result;
+                    Request = product.Adapt<ProductoRequest>();
+                    /*
+                    Request.VNombre = result.Result.VNombre;
+                    Request.VDescripcion = result.Result.VDescripcion;
+                    Request.ILaboratorioCat = result.Result.ILaboratorioCat;
+                    Request.ICategoriaCat = result.Result.ICategoriaCat;
+                    Request.IMarcaCat = result.Result.IMarcaCat;
+                    Request.DcPrecioUnitario = result.Result.DcPrecioUnitario;
+                    Request.IStock = result.Result.IStock;
+                    */
                 }
                 else
                 {
@@ -96,29 +104,31 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             }
         }
 
-        private async Task SaveClient()
+        private async Task SaveProduct()
         {
             PreloadService.Show(SpinnerColor.Light);
             try
             {
-                var update = new ClienteRequest()
+                /*
+                var update = new ProductoRequest()
                 {
-                    ITipoDocumentoCat = Request.ITipoDocumentoCat,
-                    VNumeroDocumento = Request.VNumeroDocumento,
-                    VApellidoPaterno = Request.VApellidoPaterno,
-                    VApellidoMaterno = Request.VApellidoMaterno,
-                    VNombres = Request.VNombres,
-                    VDireccion = Request.VDireccion,
-                    VCorreoElectronico = Request.VCorreoElectronico,
-                    VCelular = Request.VCelular
+                    VNombre = Request.VNombre,
+                    VDescripcion = Request.VDescripcion,
+                    ILaboratorioCat = Request.ILaboratorioCat,
+                    ICategoriaCat = Request.ICategoriaCat,
+                    IMarcaCat = Request.IMarcaCat,
+                    DcPrecioUnitario = Request.DcPrecioUnitario,
+                    IStock = Request.IStock
                 };
+                */
+                var update = Request.Adapt<ProductoRequest>();
 
                 var result = await _service.UpdateAsync(id, update);
 
                 if (result.IsSuccess)
                 {
-                    Toast.Notify(new(ToastType.Success, "Cliente editado exitosamente"));
-                    _navigation.NavigateTo(ComponentRoutes.Clients.List);
+                    Toast.Notify(new(ToastType.Success, "Producto editado exitosamente"));
+                    _navigation.NavigateTo(ComponentRoutes.Products.List);
                 }
                 else
                 {

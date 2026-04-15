@@ -1,0 +1,93 @@
+﻿﻿@using Papa.Facturacion.Dto.Request.Producto
+@using Papa.Facturacion.Dto.Response.CatalogoDetalle
+
+<EditForm Model="Request" FormName="ProductForm" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Nombre del producto</label>
+            <input class="form-control form-control-sm" @bind="Request.VNombre" />
+            <ValidationMessage For="@(() => Request.VNombre)" />
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-12 mt-2">
+            <label>Descripción del producto</label>
+            <input class="form-control form-control-sm" @bind="Request.VDescripcion" />
+            <ValidationMessage For="@(() => Request.VDescripcion)" />
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Laboratorio</label>
+            <select class="form-select form-select-sm" @bind="Request.ILaboratorioCat">
+                <option value="0">-Seleccione-</option>
+                @foreach (var item in ListLaboratorio)
+                {
+                    <option value="@item.Id">@item.Valor</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => Request.ILaboratorioCat)" />
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Categoría</label>
+            <select class="form-select form-select-sm" @bind="Request.ICategoriaCat">
+                <option value="0">-Seleccione-</option>
+                @foreach (var item in ListCategoria)
+                {
+                    <option value="@item.Id">@item.Valor</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => Request.ICategoriaCat)" />
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Marca</label>
+            <select class="form-select form-select-sm" @bind="Request.IMarcaCat">
+                <option value="0">-Seleccione-</option>
+                @foreach (var item in ListMarca)
+                {
+                    <option value="@item.Id">@item.Valor</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => Request.IMarcaCat)" />
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Precio unitario</label>
+            <input class="form-control form-control-sm" @bind="Request.DcPrecioUnitario" />
+            <ValidationMessage For="@(() => Request.DcPrecioUnitario)" />
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-2">
+            <label>Stock</label>
+            <input class="form-control form-control-sm" @bind="Request.IStock" />
+            <ValidationMessage For="@(() => Request.IStock)" />
+        </div>
+    </div>
+
+    <div class="row gx-4 mt-4">
+        <div class="col">
+            <button class="btn btn-primary" type="submit"><i class=" bi bi-save"></i> Guardar</button>
+            <a class="btn btn-danger" href="@ComponentRoutes.Products.List">Cancelar</a>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public ProductoRequest Request { get; set; } = new();
+
+    [Parameter]
+    public List<ListCatalogoDetalleByCodigoResponse> ListLaboratorio { get; set; } = new();
+
+    [Parameter]
+    public List<ListCatalogoDetalleByCodigoResponse> ListCategoria { get; set; } = new();
+
+    [Parameter]
+    public List<ListCatalogoDetalleByCodigoResponse> ListMarca { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnSaveEvent { get; set; } = default!;
+
+    public async Task OnSave()
+    {
+        await OnSaveEvent.InvokeAsync();
+    }
+}

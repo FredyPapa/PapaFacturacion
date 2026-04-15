@@ -1,20 +1,20 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Papa.Facturacion.Business.Interfaces;
-using Papa.Facturacion.Dto.Request.Cliente;
+using Papa.Facturacion.Dto.Request.Producto;
 using Papa.Facturacion.Dto.Response.CatalogoDetalle;
 using Papa.Facturacion.UI.Common;
 using Papa.Facturacion.Utils;
 
-namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
+namespace Papa.Facturacion.UI.Components.Pages.Features.Products
 {
-    public partial class CreateClient
+    public partial class CreateProduct
     {
         [Inject]
         private ICatalogoDetalleService _catalogoDetalleService { get; set; } = default!;
 
         [Inject]
-        private IClienteService _service { get; set; } = default!;
+        private IProductoService _service { get; set; } = default!;
 
         [Inject]
         private NavigationManager _navigation { get; set; } = default!;
@@ -25,8 +25,10 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
         [Inject]
         protected PreloadService PreloadService { get; set; } = default!;
 
-        private List<ListCatalogoDetalleByCodigoResponse> ListTipoDoc { get; set; } = new();
-        public ClienteRequest Request { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListLaboratorio { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListCategoria { get; set; } = new();
+        private List<ListCatalogoDetalleByCodigoResponse> ListMarca { get; set; } = new();
+        public ProductoRequest Request { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -38,11 +40,13 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             PreloadService.Show(SpinnerColor.Light);
             try
             {
-                var result = await _catalogoDetalleService.ListAsync(new List<string> { CodesCatalog.TIPO_DOCUMENTO });
+                var result = await _catalogoDetalleService.ListAsync(new List<string> { CodesCatalog.LABORATORIO, CodesCatalog.CATEGORIA, CodesCatalog.MARCA });
 
                 if (result.IsSuccess && result.Result != null)
                 {
-                    ListTipoDoc = result.Result.Where(x => x.CodigoPadre == CodesCatalog.TIPO_DOCUMENTO).ToList();
+                    ListLaboratorio = result.Result.Where(x => x.CodigoPadre == CodesCatalog.LABORATORIO).ToList();
+                    ListCategoria = result.Result.Where(x => x.CodigoPadre == CodesCatalog.CATEGORIA).ToList();
+                    ListMarca = result.Result.Where(x => x.CodigoPadre == CodesCatalog.MARCA).ToList();
                 }
                 else
                 {
@@ -59,7 +63,7 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             }
         }
 
-        private async Task SaveClient()
+        private async Task SaveProduct()
         {
             PreloadService.Show(SpinnerColor.Light);
             try
@@ -68,8 +72,8 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
 
                 if (result.IsSuccess)
                 {
-                    Toast.Notify(new(ToastType.Success, "Cliente registrado exitosamente"));
-                    _navigation.NavigateTo(ComponentRoutes.Clients.List);
+                    Toast.Notify(new(ToastType.Success, "Producto registrado exitosamente"));
+                    _navigation.NavigateTo(ComponentRoutes.Products.List);
                 }
                 else
                 {

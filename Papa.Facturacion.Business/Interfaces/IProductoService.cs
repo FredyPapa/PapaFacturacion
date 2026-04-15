@@ -10,8 +10,8 @@ namespace Papa.Facturacion.Business.Interfaces
 {
     public interface IProductoService
     {
-        Task<BaseResponse> AddAsync(CreateProductoRequest request);
-        Task<BaseResponse> UpdateAsync(int id, UpdateProductoRequest request);
+        Task<BaseResponse> AddAsync(ProductoRequest request);
+        Task<BaseResponse> UpdateAsync(int id, ProductoRequest request);
         Task<BaseResponse<GetProductoResponse>> GetByIdAsync(int id);
         Task<PagedResponse<ListProductoResponse>> ListAsync(SearchListRequest request);
         Task<BaseResponse> DeleteAsync(int id);

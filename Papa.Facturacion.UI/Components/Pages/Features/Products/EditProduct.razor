@@ -1,0 +1,21 @@
+﻿@using Papa.Facturacion.UI.Components.Pages.Features.Products.Components
+@attribute [Route(ComponentRoutes.Products.EditNav)]
+
+<GroupBox Class="mb-4">
+    <Content>
+        <div class="page-header">
+            <h2 class="page-title">Editar producto</h2>
+            <span class="page-route">@ComponentRoutes.Products.Edit</span>
+        </div>
+    </Content>
+</GroupBox>
+
+<GroupBox Title="Datos del producto">
+    <Content>
+        <FormProduct ListLaboratorio="ListLaboratorio"
+                     ListCategoria="ListCategoria"
+                     ListMarca="ListMarca"
+                    OnSaveEvent="SaveProduct"
+                    Request="Request" />
+    </Content>
+</GroupBox>

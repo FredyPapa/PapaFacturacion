@@ -9,5 +9,13 @@
             public const string Edit = "/maintenance/clients/edit";
             public const string EditNav = "/maintenance/clients/edit/{id:int}";
         }
+
+        public static class Products
+        {
+            public const string List = "/maintenance/products";
+            public const string Create = "/maintenance/products/create";
+            public const string Edit = "/maintenance/products/edit";
+            public const string EditNav = "/maintenance/products/edit/{id:int}";
+        }
     }
 }
