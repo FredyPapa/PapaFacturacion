@@ -1,0 +1,78 @@
+﻿@if (Result == null)
+{
+    <p>&nbsp;</p>
+}
+else
+{
+    <div class="row pb-5 d-flex justify-content-between align-items-center">
+        <div class="col-md-4 d-flex align-items-center">
+            @if (Result.TotalPages >= 1)
+            {
+                <ul class="pagination m-0">
+                    <li class="page-item">
+                        <button class="btn btn-outline-primary" @onclick="OnPreviousClicked">
+                            <i class="bi bi-chevron-double-left"></i>
+                        </button>
+                    </li>
+                    @if (StartPageIndex > 1)
+                    {
+                        <li class="page-item">
+                            <button class="btn btn-outline-primary" type="button" @onclick="OnPreviousGroupClicked">...</button>
+                        </li>
+                    }
+                    @for (int index = StartPageIndex; index <= EndPageIndex; index++)
+                    {
+                        var currentIndex = index;
+                        @if (Result.CurrentPage == index)
+                        {
+                            <li class="page-item active">
+                                <button class="btn btn-primary">@index</button>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <button class="btn btn-outline-primary" type="button" @onclick="() => OnPageClicked(currentIndex)">
+                                    @index
+                                </button>
+                            </li>
+                        }
+                    }
+                    @if (EndPageIndex < Result.TotalPages)
+                    {
+                        <li class="page-item">
+                            <button class="btn btn-outline-primary" type="button" @onclick="OnNextGroupClicked">...</button>
+                        </li>
+                    }
+                    <li class="page-item">
+                        <button class="btn btn-outline-primary" @onclick="OnNextClicked">
+                            <i class="bi bi-chevron-double-right"></i>
+                        </button>
+                    </li>
+                </ul>
+            }
+        </div>
+
+        <!-- Selector de cantidad de registros por página centrado -->
+        <div class="col-md-4 text-center">
+
+            <select class="form-select d-inline w-auto" @onchange="PaginationSizeChanged">
+                <option>5</option>
+                <option selected>10</option>
+                <option>20</option>
+                <option>50</option>
+            </select>
+            Registros por página
+        </div>
+
+        <!-- Información de la página actual y total de registros a la derecha -->
+        <div class="col-md-4 text-end">
+            @* Calculo del rango de registros *@
+            @{
+                int startRecord = ((Result.CurrentPage - 1) * Result.RowsPerPage) + 1;
+                int endRecord = Math.Min(Result.CurrentPage * Result.RowsPerPage, Result.TotalRows);
+            }
+            Mostrando @startRecord - @endRecord de @Result.TotalRows registros.
+        </div>
+    </div>
+}

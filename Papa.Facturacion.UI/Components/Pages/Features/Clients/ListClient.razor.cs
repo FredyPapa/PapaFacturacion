@@ -29,6 +29,8 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
 
         public ICollection<ListClienteResponse> Response { get; set; } = new List<ListClienteResponse>();
 
+        private PagerRequest Pager { get; set; } = new();
+
         protected override async Task OnInitializedAsync()
         {
             await ListClients();
@@ -49,6 +51,14 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
                 if (result!.IsSuccess)
                 {
                     Response = result.Result;
+                    //
+                    Pager = new()
+                    {
+                        CurrentPage = Request.Page,
+                        TotalPages = result.TotalPages,
+                        TotalRows = result.TotalRowPerPages,
+                        RowsPerPage = Request.Rows
+                    };
                 }
                 else
                 {
@@ -64,6 +74,13 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             {
                 PreloadService.Hide();
             }
+        }
+
+        private async Task OnPager()
+        {
+            Request.Page = Pager.CurrentPage;
+            Request.Rows = Pager.RowsPerPage;
+            await ListClients();
         }
 
         private async Task Delete(ListClienteResponse item)

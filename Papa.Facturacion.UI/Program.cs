@@ -6,6 +6,7 @@ using Papa.Facturacion.DataAccess.Context;
 using Papa.Facturacion.Repositories.Implementations;
 using Papa.Facturacion.Repositories.Interfaces;
 using Papa.Facturacion.UI.Components;
+using Scrutor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,19 +21,14 @@ builder.Services.AddDbContext<PapaFacturacionContext>(opt =>
 });
 
 //Inyección de dependencia
-builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
-builder.Services.AddScoped<ICatalogoDetalleRepository, CatalogoDetalleRepository>();
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
-builder.Services.AddScoped<IComprobanteRepository, ComprobanteRepository>();
-builder.Services.AddScoped<IComprobanteDetalleRepository, ComprobanteDetalleRepository>();
-//
-builder.Services.AddScoped<ICatalogoService, CatalogoService>();
-builder.Services.AddScoped<ICatalogoDetalleService, CatalogoDetalleService>();
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<IProductoService, ProductoService>();
-builder.Services.AddScoped<IComprobanteService, ComprobanteService>();
-builder.Services.AddScoped<IComprobanteDetalleService, ComprobanteDetalleService>();
+//Registrando las inyecciones de dependencia con Scrutor
+builder.Services.Scan(p => p
+    .FromAssemblies(typeof(IClienteRepository).Assembly, typeof(IClienteService).Assembly)
+    .AddClasses(false)
+    .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+    .AsImplementedInterfaces()
+    .WithScopedLifetime()
+);
 //
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddSweetAlert2();

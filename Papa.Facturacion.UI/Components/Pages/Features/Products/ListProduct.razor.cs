@@ -29,6 +29,8 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Products
 
         public ICollection<ListProductoResponse> Response { get; set; } = new List<ListProductoResponse>();
 
+        private PagerRequest Pager { get; set; } = new();
+
         protected override async Task OnInitializedAsync()
         {
             await ListProducts();
@@ -49,6 +51,14 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Products
                 if (result!.IsSuccess)
                 {
                     Response = result.Result;
+                    //
+                    Pager = new()
+                    {
+                        CurrentPage = Request.Page,
+                        TotalPages = result.TotalPages,
+                        TotalRows = result.TotalRowPerPages,
+                        RowsPerPage = Request.Rows
+                    };
                 }
                 else
                 {
@@ -64,6 +74,13 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Products
             {
                 PreloadService.Hide();
             }
+        }
+
+        private async Task OnPager()
+        {
+            Request.Page = Pager.CurrentPage;
+            Request.Rows = Pager.RowsPerPage;
+            await ListProducts();
         }
 
         private async Task Delete(ListProductoResponse item)
