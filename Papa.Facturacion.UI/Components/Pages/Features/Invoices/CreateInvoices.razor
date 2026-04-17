@@ -1,0 +1,116 @@
+﻿@attribute [Route(ComponentRoutes.Invoices.Create)]
+<GroupBox Class="mb-4">
+    <Content>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold mb-0">Registro de comprobante</h2>
+                <small class="text-muted">@ComponentRoutes.Invoices.Create</small>
+            </div>
+        </div>
+    </Content>
+</GroupBox>
+
+<div class="row g-4 mt-2">
+
+    <!-- PANEL IZQUIERDO -->
+    <div class="col-lg-4 col-md-5 col-sm-12">
+        <GroupBox Title="Datos del comprobante">
+            <Content>
+
+                <!-- Acciones -->
+                <div class="d-grid gap-2 mb-4">
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-person-plus me-2"></i>Agregar cliente
+                    </button>
+                    <button class="btn btn-outline-secondary">
+                        <i class="bi bi-box-seam me-2"></i>Agregar productos
+                    </button>
+                </div>
+
+                <!-- Cliente -->
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        <small class="text-muted">Cliente</small>
+                        <h5 class="fw-bold mb-0">-</h5>
+                    </div>
+                </div>
+
+                <!-- Totales -->
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <div class="card bg-light text-center">
+                            <div class="card-body p-2">
+                                <small class="text-muted">Total Bruto</small>
+                                <h6 class="fw-bold mb-0">S/ 00.00</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card bg-light text-center">
+                            <div class="card-body p-2">
+                                <small class="text-muted">IGV</small>
+                                <h6 class="fw-bold mb-0">S/ 00.00</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card bg-light text-center">
+                            <div class="card-body p-2">
+                                <small class="text-muted">Total Neto</small>
+                                <h6 class="fw-bold mb-0 text-success">S/ 00.00</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mb-4">
+                    <button class="btn btn-outline-success">
+                        <i class="bi bi-save me-2"></i>Guardar comprobante
+                    </button>
+                </div>
+            </Content>
+        </GroupBox>
+    </div>
+
+    <!-- PANEL DERECHO -->
+    <div class="col-lg-8 col-md-7 col-sm-12">
+        <GroupBox Title="Productos del pedido">
+            <Content>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Marca</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Subtotal</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           
+                               
+                            <tr>
+                                <td>item.Nombre</td>
+                                <td>item.Marca</td>
+                                <td class="text-end">S/ item.PrecioUnitario</td>
+                                <td class="text-center">
+                                    <input class="form-control form-control-sm text-center" type="number" />
+                                </td>
+                                <td class="text-end">S/ </td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                               
+                        </tbody>
+                    </table>
+                </div>
+
+            </Content>
+        </GroupBox>
+    </div>
+
+</div>

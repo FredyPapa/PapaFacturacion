@@ -17,5 +17,11 @@
             public const string Edit = "/maintenance/products/edit";
             public const string EditNav = "/maintenance/products/edit/{id:int}";
         }
+
+        public static class Invoices
+        {
+            public const string List = "/maintenance/invoices";
+            public const string Create = "/maintenance/invoices/create";
+        }
     }
 }

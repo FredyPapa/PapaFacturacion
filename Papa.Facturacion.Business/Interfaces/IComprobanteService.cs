@@ -10,10 +10,7 @@ namespace Papa.Facturacion.Business.Interfaces
 {
     public interface IComprobanteService
     {
-        Task<BaseResponse> AddAsync(CreateComprobanteRequest request);
-        Task<BaseResponse> UpdateAsync(int id, UpdateComprobanteRequest request);
-        Task<BaseResponse<GetComprobanteResponse>> GetByIdAsync(int id);
+        Task<BaseResponse> AddAsync(ComprobanteRequest request);
         Task<PagedResponse<ListComprobanteResponse>> ListAsync(SearchListRequest request);
-        Task<BaseResponse> DeleteAsync(int id);
     }
 }

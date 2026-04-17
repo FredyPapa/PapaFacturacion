@@ -7,5 +7,6 @@ namespace Papa.Facturacion.Repositories.Interfaces
 {
     public interface IComprobanteRepository : IBaseRepository<Comprobante>
     {
+        Task CreateAsync(Comprobante request);
     }
 }

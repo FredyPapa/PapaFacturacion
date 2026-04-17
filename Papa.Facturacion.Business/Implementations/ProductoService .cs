@@ -7,6 +7,7 @@ using Papa.Facturacion.Dto.Request.Producto;
 using Papa.Facturacion.Dto.Response;
 using Papa.Facturacion.Dto.Response.Producto;
 using Papa.Facturacion.Repositories.Interfaces;
+using Papa.Facturacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -131,7 +132,7 @@ namespace Papa.Facturacion.Business.Implementations
                 response.IsSuccess = true;
                 response.Result = result.Result;
                 response.TotalRowPerPages = result.Result.Count;
-                response.TotalPages = (int)Math.Ceiling((double)result.TotalRows / request.Rows);
+                response.TotalPages = Helpers.CalculatePageCount(result.TotalRows, request.Rows); //(int)Math.Ceiling((double)result.TotalRows / request.Rows);
             }
             catch (Exception ex)
             {

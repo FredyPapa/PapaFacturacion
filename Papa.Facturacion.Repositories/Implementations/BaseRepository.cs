@@ -11,7 +11,7 @@ namespace Papa.Facturacion.Repositories.Implementations
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly PapaFacturacionContext _context;
+        protected readonly PapaFacturacionContext _context;
 
         public BaseRepository(PapaFacturacionContext context)
         {

@@ -7,8 +7,10 @@ using Papa.Facturacion.Dto.Request.Comprobante;
 using Papa.Facturacion.Dto.Response;
 using Papa.Facturacion.Dto.Response.Comprobante;
 using Papa.Facturacion.Repositories.Interfaces;
+using Papa.Facturacion.Utils;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 
 namespace Papa.Facturacion.Business.Implementations
@@ -25,13 +27,17 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Crear
-        public async Task<BaseResponse> AddAsync(CreateComprobanteRequest request)
+        public async Task<BaseResponse> AddAsync(ComprobanteRequest request)
         {
             var response = new BaseResponse();
             try
             {
-                await _repository.AddAsync(request.Adapt<Comprobante>());
+                var comprobante = request.Adapt<Comprobante>();
+                CalculateTotal(comprobante);
+
+                await _repository.CreateAsync(comprobante);
                 response.IsSuccess = true;
+                response.Message = "Comprobante registrado exitosamente.";
             }
             catch (Exception ex)
             {
@@ -42,61 +48,17 @@ namespace Papa.Facturacion.Business.Implementations
             return response;
         }
 
-        //Actualizar
-        public async Task<BaseResponse> UpdateAsync(int id, UpdateComprobanteRequest request)
+        private static void CalculateTotal(Comprobante request)
         {
-            var response = new BaseResponse();
-            try
+            _ = request.ComprobanteDetalles.Select(x =>
             {
-                var comprobante = await _repository.GetByIdAsync(id);
+                x.DcTotal = x.DcPrecioUnitario * x.ICantidad;
+                return x;
+            }).ToList();
 
-                if(comprobante is null)
-                {
-                    response.IsSuccess = true;
-                    response.ErrorCode = "COMPROBANTE_NOT_FOUND";
-                    response.Message = "Comprobante no encontrado";
-                    return response;
-                }
-
-                request.Adapt(comprobante);
-                await _repository.UpdateAsync();
-                response.IsSuccess = true;
-            }
-            catch(Exception ex)
-            {
-                response.IsSuccess = false;
-                response.Message = "Hubo un error al actualizar el comprobante";
-                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
-            }
-            return response;
-        }
-
-        //Obtener por Id
-        public async Task<BaseResponse<GetComprobanteResponse>> GetByIdAsync(int id)
-        {
-            var response = new BaseResponse<GetComprobanteResponse>();
-            try
-            {
-                var comprobante = await _repository.GetByIdAsync(id);
-
-                if (comprobante is null)
-                {
-                    response.IsSuccess = true;
-                    response.ErrorCode = "COMPROBANTE_NOT_FOUND";
-                    response.Message = "Comprobante no encontrado";
-                    return response;
-                }
-
-                response.Result = comprobante.Adapt<GetComprobanteResponse>();
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccess = false;
-                response.Message = "Hubo un error al obtener el comprobante";
-                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
-            }
-            return response;
+            request.DcTotalBruto = request.ComprobanteDetalles.Sum(x => x.DcTotal);
+            request.DcIgv = request.DcTotalBruto * Constants.IGV;
+            request.DcTotaNeto = request.DcTotalBruto + (request.DcIgv ?? 0);
         }
 
         //Listar con paginación
@@ -115,11 +77,16 @@ namespace Papa.Facturacion.Business.Implementations
                         selector: p => new ListComprobanteResponse
                         {
                             Id = p.IId,
+                            IdTipoComprobante = p.ITipoComprobanteCat,
                             TipoComprobante = p.ITipoComprobanteCatNavigation.VDescripcion!,
+                            IdTipoPago = p.ITipoPagoCat,
                             TipoPago = p.ITipoPagoCatNavigation.VDescripcion!,
+                            IdCliente = p.ICliente,
                             Cliente = p.IClienteNavigation.VNombres! + " " + p.IClienteNavigation.VApellidoPaterno! + " " + p.IClienteNavigation.VApellidoMaterno!,
-                            DcTotalBruto = p.DcTotalBruto,
-                            DcIgv = p.DcIgv,
+                            TotalBruto = p.DcTotalBruto,
+                            Igv = p.DcIgv,
+                            TotalNeto = p.DcTotaNeto,
+                            CantidadProductos = p.ComprobanteDetalles.Count,
                             FechaRegistro = p.DFechaCreacion
                         },
                         orderBy: p => p.IId,
@@ -136,34 +103,6 @@ namespace Papa.Facturacion.Business.Implementations
             {
                 response.IsSuccess = false;
                 response.Message = "Hubo un error al listar comprobantes.";
-                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
-            }
-            return response;
-        }
-
-        //Eliminar
-        public async Task<BaseResponse> DeleteAsync(int id)
-        {
-            var response = new BaseResponse();
-            try
-            {
-                var comprobante = await _repository.GetByIdAsync(id);
-
-                if (comprobante is null)
-                {
-                    response.IsSuccess = true;
-                    response.ErrorCode = "COMPROBANTE_NOT_FOUND";
-                    response.Message = "Comprobante no encontrado.";
-                    return response;
-                }
-
-                await _repository.DeleteAsync(id);
-                response.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                response.IsSuccess = false;
-                response.Message = "Hubo un error al eliminar comprobante.";
                 _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
             }
             return response;
