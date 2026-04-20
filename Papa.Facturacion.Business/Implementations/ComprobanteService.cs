@@ -33,6 +33,11 @@ namespace Papa.Facturacion.Business.Implementations
             try
             {
                 var comprobante = request.Adapt<Comprobante>();
+                //
+                comprobante.IClienteNavigation = null!;
+                comprobante.ITipoComprobanteCatNavigation = null!;
+                comprobante.ITipoPagoCatNavigation = null!;
+                //
                 CalculateTotal(comprobante);
 
                 await _repository.CreateAsync(comprobante);

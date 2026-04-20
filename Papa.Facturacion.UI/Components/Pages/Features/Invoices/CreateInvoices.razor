@@ -1,4 +1,7 @@
-﻿@attribute [Route(ComponentRoutes.Invoices.Create)]
+﻿@using Papa.Facturacion.UI.Components.Pages.Features.Clients.Components
+@using Papa.Facturacion.UI.Components.Pages.Features.Products.Components
+@attribute [Route(ComponentRoutes.Invoices.Create)]
+
 <GroupBox Class="mb-4">
     <Content>
         <div class="d-flex justify-content-between align-items-center">
@@ -19,19 +22,43 @@
 
                 <!-- Acciones -->
                 <div class="d-grid gap-2 mb-4">
-                    <button class="btn btn-outline-primary">
+                    <button class="btn btn-outline-primary" @onclick="() => ModalClient.ShowAsync()">
                         <i class="bi bi-person-plus me-2"></i>Agregar cliente
                     </button>
-                    <button class="btn btn-outline-secondary">
+                    <button class="btn btn-outline-secondary" @onclick="() => ModalProduct.ShowAsync()">
                         <i class="bi bi-box-seam me-2"></i>Agregar productos
                     </button>
+                </div>
+
+                <!-- Tipo de Comprobante -->
+                <div class="mb-2">
+                    <label class="form-label fw-semibold">Tipo de Comprobante</label>
+                    <select class="form-select form-select-sm" @bind="Request.ITipoComprobanteCat">
+                        <option value="0">-Seleccione-</option>
+                        @foreach (var item in ListTipoComprobante)
+                        {
+                            <option value="@item.Id">@item.Valor</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Tipo de Pago -->
+                <div class="mb-2">
+                    <label class="form-label fw-semibold">Tipo de Pago</label>
+                    <select class="form-select form-select-sm" @bind="Request.ITipoPagoCat">
+                        <option value="0">-Seleccione-</option>
+                        @foreach (var item in ListTipoPago)
+                        {
+                            <option value="@item.Id">@item.Valor</option>
+                        }
+                    </select>
                 </div>
 
                 <!-- Cliente -->
                 <div class="card shadow-sm mb-3">
                     <div class="card-body text-center">
                         <small class="text-muted">Cliente</small>
-                        <h5 class="fw-bold mb-0">-</h5>
+                        <h5 class="fw-bold mb-0">>@Request.NombreCliente</h5>
                     </div>
                 </div>
 
@@ -41,7 +68,7 @@
                         <div class="card bg-light text-center">
                             <div class="card-body p-2">
                                 <small class="text-muted">Total Bruto</small>
-                                <h6 class="fw-bold mb-0">S/ 00.00</h6>
+                                <h6 class="fw-bold mb-0">@TotalBruto.ToString("##.##")</h6>
                             </div>
                         </div>
                     </div>
@@ -49,7 +76,7 @@
                         <div class="card bg-light text-center">
                             <div class="card-body p-2">
                                 <small class="text-muted">IGV</small>
-                                <h6 class="fw-bold mb-0">S/ 00.00</h6>
+                                <h6 class="fw-bold mb-0">@IGV.ToString("##.##")</h6>
                             </div>
                         </div>
                     </div>
@@ -57,14 +84,14 @@
                         <div class="card bg-light text-center">
                             <div class="card-body p-2">
                                 <small class="text-muted">Total Neto</small>
-                                <h6 class="fw-bold mb-0 text-success">S/ 00.00</h6>
+                                <h6 class="fw-bold mb-0 text-success">@TotalNeto.ToString("##.##")</h6>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="d-grid gap-2 mb-4">
-                    <button class="btn btn-outline-success">
+                    <button class="btn btn-outline-success" @onclick="OnSave">
                         <i class="bi bi-save me-2"></i>Guardar comprobante
                     </button>
                 </div>
@@ -90,21 +117,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                           
-                               
-                            <tr>
-                                <td>item.Nombre</td>
-                                <td>item.Marca</td>
-                                <td class="text-end">S/ item.PrecioUnitario</td>
-                                <td class="text-center">
-                                    <input class="form-control form-control-sm text-center" type="number" />
-                                </td>
-                                <td class="text-end">S/ </td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                                </td>
-                            </tr>
-                               
+                            @foreach (var item in RequestProducts)
+                            {
+                                <tr>
+                                    <td>@item.NombreProducto</td>
+                                    <td>@item.Marca</td>
+                                    <td class="text-end">S/ @item.DcPrecioUnitario</td>
+                                    <td class="text-center">
+                                        <input class="form-control form-control-sm text-center" min="1" type="number" @bind="item.ICantidad" />
+                                    </td>
+                                    <td class="text-end">S/ @item.DcTotal</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-danger" @onclick="() => OnRemoveProduct(item)"><i class="bi bi-trash"></i></button>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -114,3 +141,21 @@
     </div>
 
 </div>
+
+<Modal Title="Seleccionar cliente"
+       Size="ModalSize.ExtraLarge"
+       UseStaticBackdrop="true"
+       @ref="ModalClient">
+    <BodyTemplate>
+        <SelectClient SelectEvent="OnSelectClient" />
+    </BodyTemplate>
+</Modal>
+
+<Modal Title="Seleccionar producto"
+       Size="ModalSize.ExtraLarge"
+       UseStaticBackdrop="true"
+       @ref="ModalProduct">
+    <BodyTemplate>
+        <SelectProduct SelectEvent="OnSelectProduct" />
+    </BodyTemplate>
+</Modal>

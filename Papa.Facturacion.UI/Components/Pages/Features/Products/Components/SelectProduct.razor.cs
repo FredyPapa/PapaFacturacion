@@ -1,20 +1,16 @@
 ﻿using BlazorBootstrap;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Papa.Facturacion.Business.Interfaces;
 using Papa.Facturacion.Dto.Request;
-using Papa.Facturacion.Dto.Response.Comprobante;
+using Papa.Facturacion.Dto.Response.Producto;
 
-namespace Papa.Facturacion.UI.Components.Pages.Features.Invoices
+namespace Papa.Facturacion.UI.Components.Pages.Features.Products.Components
 {
-    public partial class ListInvoices
+    public partial class SelectProduct
     {
         [Inject]
-        private IComprobanteService _service { get; set; } = default!;
-
-        [Inject]
-        private SweetAlertService Swal { get; set; } = default!;
+        public IProductoService _service { get; set; } = default!;
 
         [Inject]
         private ToastService Toast { get; set; } = default!;
@@ -27,25 +23,25 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Invoices
         [Inject]
         public NavigationManager Navigation { get; set; } = default!;
 
-        public ICollection<ListComprobanteResponse> Response { get; set; } = new List<ListComprobanteResponse>();
+        public ICollection<ListProductoResponse> Response { get; set; } = new List<ListProductoResponse>();
 
         private PagerRequest Pager { get; set; } = new();
-
-        [Inject]
-        private IJSRuntime _js { get; set; } = default!;
+        
+        [Parameter]
+        public EventCallback<ListProductoResponse> SelectEvent { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
-            await ListComprobantes();
+            await ListProducts();
         }
 
         private async Task Refresh()
         {
             Request = new();
-            await ListComprobantes();
+            await ListProducts();
         }
 
-        private async Task ListComprobantes()
+        private async Task ListProducts()
         {
             PreloadService.Show(SpinnerColor.Light);
             try
@@ -54,6 +50,7 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Invoices
                 if (result!.IsSuccess)
                 {
                     Response = result.Result;
+                    //
                     Pager = new()
                     {
                         CurrentPage = Request.Page,
@@ -82,7 +79,12 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Invoices
         {
             Request.Page = Pager.CurrentPage;
             Request.Rows = Pager.RowsPerPage;
-            await ListComprobantes();
+            await ListProducts();
+        }
+
+        private async Task OnSelect(ListProductoResponse item)
+        {
+            await SelectEvent.InvokeAsync(item);
         }
     }
 }

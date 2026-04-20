@@ -9,39 +9,39 @@ namespace Papa.Facturacion.Dto.Request.Comprobante
 {
     public class ComprobanteRequest
     {
-        public int TipoComprobante { get; set; }
+        public int ITipoComprobanteCat { get; set; }
 
-        public int TipoPago { get; set; }
+        public int ITipoPagoCat { get; set; }
 
-        public int IdCliente { get; set; }
+        public int ICliente { get; set; }
 
         public string NombreCliente { get; set; } = default!;
         
         public List<ComprobanteDetalleRequest> ComprobanteDetalles { get; set; } = new();
 
-        /*public decimal TotalBruto => ComprobanteDetalles.Sum(d => d.Total);
+        public decimal DcTotalBruto { get; set; }
 
-        public decimal IGV => TotalBruto * Constants.IGV;
+        public decimal DcIgv { get; set; }
 
-        public decimal TotalNeto => TotalBruto + IGV;*/
+        public decimal DcTotaNeto { get; set; }
 
     }
 
     public class ComprobanteDetalleRequest
     {
 
-        public int IdProducto { get; set; }
+        public int IProducto { get; set; }
 
         public string NombreProducto { get; set; } = default!;
 
         public string Marca { get; set; } = default!;
 
         [Range(1,int.MaxValue, ErrorMessage = "La cantidad debe ser un número positivo")]
-        public decimal Cantidad { get; set; }
+        public decimal ICantidad { get; set; }
 
-        public decimal PrecioUnitario { get; set; }
+        public decimal DcPrecioUnitario { get; set; }
 
-        public decimal Total => PrecioUnitario * Cantidad;
+        public decimal DcTotal => DcPrecioUnitario * ICantidad;
 
     }
 }
