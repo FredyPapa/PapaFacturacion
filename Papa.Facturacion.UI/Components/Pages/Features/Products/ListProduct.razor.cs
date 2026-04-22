@@ -1,6 +1,7 @@
 ﻿using BlazorBootstrap;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Papa.Facturacion.Business.Interfaces;
 using Papa.Facturacion.Dto.Request;
 using Papa.Facturacion.Dto.Response;
@@ -30,6 +31,9 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Products
         public ICollection<ListProductoResponse> Response { get; set; } = new List<ListProductoResponse>();
 
         private PagerRequest Pager { get; set; } = new();
+
+        [Inject]
+        private IJSRuntime _js { get; set; } = default!;
 
         protected override async Task OnInitializedAsync()
         {
@@ -120,6 +124,25 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Products
         }
 
         private async Task ToEdit(int id) => Navigation.NavigateTo($"{Common.ComponentRoutes.Products.Edit}/{id}");
+
+        private async Task ExportExcel()
+        {
+            PreloadService.Show(SpinnerColor.Light);
+            try
+            {
+                var result = await _service.ExportListAsync(Request);
+                var content = result.Result;
+                await _js.InvokeVoidAsync("descargarArchivo", "Productos.xlsx", content!.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Toast.Notify(new(ToastType.Danger, ex.Message!));
+            }
+            finally
+            {
+                PreloadService.Hide();
+            }
+        }
 
     }
 }

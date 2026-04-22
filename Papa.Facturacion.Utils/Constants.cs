@@ -7,5 +7,6 @@ namespace Papa.Facturacion.Utils
     public static class Constants
     {
         public const decimal IGV = 0.18m;
+        public const int MaxExportRows = 50000;
     }
 }

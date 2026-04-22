@@ -84,5 +84,24 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Invoices
             Request.Rows = Pager.RowsPerPage;
             await ListComprobantes();
         }
+
+        private async Task ExportExcel()
+        {
+            PreloadService.Show(SpinnerColor.Light);
+            try
+            {
+                var result = await _service.ExportListAsync(Request);
+                var content = result.Result;
+                await _js.InvokeVoidAsync("descargarArchivo", "Comprobantes.xlsx", content!.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Toast.Notify(new(ToastType.Danger, ex.Message!));
+            }
+            finally
+            {
+                PreloadService.Hide();
+            }
+        }
     }
 }

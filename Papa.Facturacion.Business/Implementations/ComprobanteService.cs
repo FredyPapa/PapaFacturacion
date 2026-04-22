@@ -19,11 +19,13 @@ namespace Papa.Facturacion.Business.Implementations
     {
         private readonly IComprobanteRepository _repository;
         private readonly ILogger<ComprobanteService> _logger;
+        private readonly IExcelService _excel;
 
-        public ComprobanteService(IComprobanteRepository repository, ILogger<ComprobanteService> logger)
+        public ComprobanteService(IComprobanteRepository repository, ILogger<ComprobanteService> logger, IExcelService excel)
         {
             _repository = repository;
             _logger = logger;
+            _excel = excel;
         }
 
         //Crear
@@ -108,6 +110,50 @@ namespace Papa.Facturacion.Business.Implementations
             {
                 response.IsSuccess = false;
                 response.Message = "Hubo un error al listar comprobantes.";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
+
+        //Exportar a Excel
+        public async Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request)
+        {
+            var response = new BaseResponse<MemoryStream>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado &&
+                                    (
+                                        (string.IsNullOrEmpty(request.Filter) || p.ITipoComprobanteCatNavigation.VDescripcion!.Contains(request.Filter)) ||
+                                        (string.IsNullOrEmpty(request.Filter) || p.ITipoPagoCatNavigation.VDescripcion!.Contains(request.Filter)) ||
+                                        (string.IsNullOrEmpty(request.Filter) || (p.IClienteNavigation.VNombres! + " " + p.IClienteNavigation.VApellidoPaterno! + " " + p.IClienteNavigation.VApellidoMaterno!).Contains(request.Filter))
+                                    ),
+                        selector: p => new ListComprobanteResponse
+                        {
+                            Id = p.IId,
+                            IdTipoComprobante = p.ITipoComprobanteCat,
+                            TipoComprobante = p.ITipoComprobanteCatNavigation.VDescripcion!,
+                            IdTipoPago = p.ITipoPagoCat,
+                            TipoPago = p.ITipoPagoCatNavigation.VDescripcion!,
+                            IdCliente = p.ICliente,
+                            Cliente = p.IClienteNavigation.VNombres! + " " + p.IClienteNavigation.VApellidoPaterno! + " " + p.IClienteNavigation.VApellidoMaterno!,
+                            TotalBruto = p.DcTotalBruto,
+                            Igv = p.DcIgv,
+                            TotalNeto = p.DcTotaNeto,
+                            CantidadProductos = p.ComprobanteDetalles.Count,
+                            FechaRegistro = p.DFechaCreacion
+                        },
+                        orderBy: p => p.IId,
+                        page: request.Page,
+                        pageSize: Constants.MaxExportRows
+                    );
+
+                response.Result = _excel.ExportExcel(result.Result, "Comprobantes");
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.Message = "Ocurrió un error al exportar los comprobantes.";
                 _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
             }
             return response;

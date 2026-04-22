@@ -5,6 +5,7 @@ using Papa.Facturacion.DataAccess;
 using Papa.Facturacion.Dto.Request;
 using Papa.Facturacion.Dto.Request.Producto;
 using Papa.Facturacion.Dto.Response;
+using Papa.Facturacion.Dto.Response.Comprobante;
 using Papa.Facturacion.Dto.Response.Producto;
 using Papa.Facturacion.Repositories.Interfaces;
 using Papa.Facturacion.Utils;
@@ -18,11 +19,13 @@ namespace Papa.Facturacion.Business.Implementations
     {
         private readonly IProductoRepository _repository;
         private readonly ILogger<ProductoService> _logger;
+        private readonly IExcelService _excel;
 
-        public ProductoService(IProductoRepository repository, ILogger<ProductoService> logger)
+        public ProductoService(IProductoRepository repository, ILogger<ProductoService> logger, IExcelService excel)
         {
             _repository = repository;
             _logger = logger;
+            _excel = excel;
         }
 
         //Crear
@@ -166,6 +169,46 @@ namespace Papa.Facturacion.Business.Implementations
             {
                 response.IsSuccess = false;
                 response.Message = "Hubo un error al eliminar producto.";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
+
+        //Exportar a Excel
+        public async Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request)
+        {
+            var response = new BaseResponse<MemoryStream>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado &&
+                            (
+                                (string.IsNullOrEmpty(request.Filter) || p.VNombre.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.VDescripcion.Contains(request.Filter))
+                            ),
+                        selector: p => new ListProductoResponse
+                        {
+                            Id = p.IId,
+                            Nombre = p.VNombre,
+                            Descripcion = p.VDescripcion,
+                            Laboratorio = p.ILaboratorioCatNavigation.VDescripcion!,
+                            Categoria = p.ICategoriaCatNavigation.VDescripcion!,
+                            Marca = p.IMarcaCatNavigation.VDescripcion!,
+                            PrecioUnitario = p.DcPrecioUnitario,
+                            Stock = p.IStock,
+                            FechaRegistro = p.DFechaCreacion
+                        },
+                        orderBy: p => p.VNombre,
+                        page: request.Page,
+                        pageSize: Constants.MaxExportRows
+                    );
+
+                response.Result = _excel.ExportExcel(result.Result, "Productos");
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.Message = "Ocurrió un error al exportar los productos.";
                 _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
             }
             return response;

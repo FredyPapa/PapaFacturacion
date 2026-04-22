@@ -6,6 +6,7 @@ using Papa.Facturacion.Dto.Request;
 using Papa.Facturacion.Dto.Request.Cliente;
 using Papa.Facturacion.Dto.Response;
 using Papa.Facturacion.Dto.Response.Cliente;
+using Papa.Facturacion.Dto.Response.Producto;
 using Papa.Facturacion.Repositories.Interfaces;
 using Papa.Facturacion.Utils;
 using System;
@@ -18,11 +19,13 @@ namespace Papa.Facturacion.Business.Implementations
     {
         private readonly IClienteRepository _repository;
         private readonly ILogger<ClienteService> _logger;
+        private readonly IExcelService _excel;
 
-        public ClienteService(IClienteRepository repository, ILogger<ClienteService> logger)
+        public ClienteService(IClienteRepository repository, ILogger<ClienteService> logger, IExcelService excel)
         {
             _repository = repository;
             _logger = logger;
+            _excel = excel;
         }
 
         //Crear
@@ -187,5 +190,46 @@ namespace Papa.Facturacion.Business.Implementations
             return response;
         }
 
+        //Exportar a Excel
+        public async Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request)
+        {
+            var response = new BaseResponse<MemoryStream>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado &&
+                            (
+                                (string.IsNullOrEmpty(request.Filter) || p.VApellidoPaterno.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.VApellidoPaterno.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.VNombres.Contains(request.Filter))
+                            ),
+                        selector: p => new ListClienteResponse
+                        {
+                            Id = p.IId,
+                            TipoDocumento = p.ITipoDocumentoCatNavigation.VDescripcion!,
+                            NumeroDocumento = p.VNumeroDocumento,
+                            ApellidoPaterno = p.VApellidoPaterno,
+                            ApellidoMaterno = p.VApellidoMaterno,
+                            Nombres = p.VNombres,
+                            Direccion = p.VDireccion,
+                            CorreoElectronico = p.VCorreoElectronico,
+                            Celular = p.VCelular,
+                            FechaRegistro = p.DFechaCreacion
+                        },
+                        orderBy: p => p.VApellidoPaterno,
+                        page: request.Page,
+                        pageSize: Constants.MaxExportRows
+                    );
+
+                response.Result = _excel.ExportExcel(result.Result, "Clientes");
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.Message = "Ocurrió un error al exportar los clientes.";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
     }
 }

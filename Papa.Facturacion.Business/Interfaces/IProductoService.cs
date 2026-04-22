@@ -15,5 +15,6 @@ namespace Papa.Facturacion.Business.Interfaces
         Task<BaseResponse<GetProductoResponse>> GetByIdAsync(int id);
         Task<PagedResponse<ListProductoResponse>> ListAsync(SearchListRequest request);
         Task<BaseResponse> DeleteAsync(int id);
+        Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request);
     }
 }

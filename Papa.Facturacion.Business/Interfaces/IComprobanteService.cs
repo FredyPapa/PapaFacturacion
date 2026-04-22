@@ -12,5 +12,6 @@ namespace Papa.Facturacion.Business.Interfaces
     {
         Task<BaseResponse> AddAsync(ComprobanteRequest request);
         Task<PagedResponse<ListComprobanteResponse>> ListAsync(SearchListRequest request);
+        Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request);
     }
 }

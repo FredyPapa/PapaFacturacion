@@ -1,44 +1,11 @@
 ﻿@page "/"
-@using Papa.Facturacion.DataAccess
-@using Papa.Facturacion.Repositories.Interfaces
-@inject ICatalogoRepository _catalogo
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
-<h1>Catálogo</h1>
+<h1>Bienvenidos</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in Catalogos)
-        {
-            <tr>
-                <td>@item.IId</td>
-                <td>@item.VNombre</td>
-                <td>@item.VDescripcion</td>
-            </tr>
-        }
-    </tbody>
-</table>
+
 
 @code{
-    public ICollection<Catalogo> Catalogos { get; set; } = new List<Catalogo>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        await GetCatalogo();
-    }
-
-    public async Task<ICollection<Catalogo>> GetCatalogo()
-    {
-        Catalogos = await _catalogo.ListAsync();
-
-        return Catalogos;
-    }
+   
 }
