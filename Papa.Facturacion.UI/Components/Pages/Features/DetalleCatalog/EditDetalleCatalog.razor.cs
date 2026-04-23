@@ -1,23 +1,23 @@
 ﻿using BlazorBootstrap;
 using Microsoft.AspNetCore.Components;
 using Papa.Facturacion.Business.Interfaces;
+using Papa.Facturacion.Dto.Request.CatalogoDetalle;
 using Papa.Facturacion.Dto.Request.Cliente;
-using Papa.Facturacion.Dto.Response.CatalogoDetalle;
+using Papa.Facturacion.Dto.Response.Catalogo;
 using Papa.Facturacion.UI.Common;
-using Papa.Facturacion.Utils;
 
-namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
+namespace Papa.Facturacion.UI.Components.Pages.Features.DetalleCatalog
 {
-    public partial class EditCient
+    public partial class EditDetalleCatalog
     {
         [Parameter]
         public int id { get; set; }
 
         [Inject]
-        private ICatalogoDetalleService _catalogoDetalleService { get; set; } = default!;
+        private ICatalogoService _catalogoService { get; set; } = default!;
 
         [Inject]
-        private IClienteService _service { get; set; } = default!;
+        private ICatalogoDetalleService _service { get; set; } = default!;
 
         [Inject]
         private NavigationManager _navigation { get; set; } = default!;
@@ -28,26 +28,26 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
         [Inject]
         protected PreloadService PreloadService { get; set; } = default!;
 
-        private List<ListCatalogoDetalleByCodigoResponse> ListTipoDoc { get; set; } = new();
+        private List<ListCatalogoResponse> ListCatalogo { get; set; } = new();
 
-        public ClienteRequest Request { get; set; } = new();
+        public CatalogoDetalleRequest Request { get; set; } = new();
 
         protected override async Task OnInitializedAsync()
         {
-            await GetCatalogoDetalleAsync();
+            await GetCatalogoAsync();
             await GetByIdAsync();
         }
 
-        private async Task GetCatalogoDetalleAsync()
+        private async Task GetCatalogoAsync()
         {
             PreloadService.Show(SpinnerColor.Light);
             try
             {
-                var result = await _catalogoDetalleService.ListAsync(new List<string> { CodesCatalog.TIPO_DOCUMENTO });
+                var result = await _catalogoService.ListAsync();
 
                 if (result.IsSuccess && result.Result != null)
                 {
-                    ListTipoDoc = result.Result.Where(x => x.CodigoPadre == CodesCatalog.TIPO_DOCUMENTO).ToList();
+                    ListCatalogo = result.Result.ToList();
                 }
                 else
                 {
@@ -73,14 +73,9 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
 
                 if (result.IsSuccess && result.Result != null)
                 {
-                    Request.ITipoDocumentoCat = result.Result.ITipoDocumentoCat;
-                    Request.VNumeroDocumento = result.Result.VNumeroDocumento;
-                    Request.VApellidoPaterno = result.Result.VApellidoPaterno;
-                    Request.VApellidoMaterno = result.Result.VApellidoMaterno;
-                    Request.VNombres = result.Result.VNombres;
-                    Request.VDireccion = result.Result.VDireccion;
-                    Request.VCorreoElectronico = result.Result.VCorreoElectronico;
-                    Request.VCelular = result.Result.VCelular;
+                    Request.ICatalogo = result.Result.ICatalogo;
+                    Request.VCodigo = result.Result.VCodigo;
+                    Request.VDescripcion = result.Result.VDescripcion;
                 }
                 else
                 {
@@ -97,29 +92,24 @@ namespace Papa.Facturacion.UI.Components.Pages.Features.Clients
             }
         }
 
-        private async Task SaveClient()
+        private async Task SaveDetalleCatalog()
         {
             PreloadService.Show(SpinnerColor.Light);
             try
             {
-                var update = new ClienteRequest()
+                var update = new CatalogoDetalleRequest()
                 {
-                    ITipoDocumentoCat = Request.ITipoDocumentoCat,
-                    VNumeroDocumento = Request.VNumeroDocumento,
-                    VApellidoPaterno = Request.VApellidoPaterno,
-                    VApellidoMaterno = Request.VApellidoMaterno,
-                    VNombres = Request.VNombres,
-                    VDireccion = Request.VDireccion,
-                    VCorreoElectronico = Request.VCorreoElectronico,
-                    VCelular = Request.VCelular
+                    ICatalogo = Request.ICatalogo,
+                    VCodigo = Request.VCodigo,
+                    VDescripcion = Request.VDescripcion,
                 };
 
                 var result = await _service.UpdateAsync(id, update);
 
                 if (result.IsSuccess)
                 {
-                    Toast.Notify(new(ToastType.Success, "Cliente editado exitosamente"));
-                    _navigation.NavigateTo(ComponentRoutes.Clients.List);
+                    Toast.Notify(new(ToastType.Success, "Catálogo actualizado exitosamente"));
+                    _navigation.NavigateTo(ComponentRoutes.DetalleCatalog.List);
                 }
                 else
                 {

@@ -1,0 +1,19 @@
+﻿@using Papa.Facturacion.UI.Components.Pages.Features.DetalleCatalog.Components
+@attribute [Route(ComponentRoutes.DetalleCatalog.Create)]
+
+<GroupBox Class="mb-4">
+    <Content>
+        <div class="page-header">
+            <h2 class="page-title">Registrar Catálogo</h2>
+            <span class="page-route">@ComponentRoutes.DetalleCatalog.Create</span>
+        </div>
+    </Content>
+</GroupBox>
+
+<GroupBox Title="Datos del catálogo">
+    <Content>
+        <FormDetalleCatalog ListCatalogo="ListCatalogo"
+                     OnSaveEvent="SaveDetalleCatalog"
+                     Request="Request" />
+    </Content>
+</GroupBox>

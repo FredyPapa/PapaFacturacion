@@ -5,8 +5,10 @@ using Papa.Facturacion.DataAccess;
 using Papa.Facturacion.Dto.Request;
 using Papa.Facturacion.Dto.Request.CatalogoDetalle;
 using Papa.Facturacion.Dto.Response;
+using Papa.Facturacion.Dto.Response.Catalogo;
 using Papa.Facturacion.Dto.Response.CatalogoDetalle;
 using Papa.Facturacion.Repositories.Interfaces;
+using Papa.Facturacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,15 +19,17 @@ namespace Papa.Facturacion.Business.Implementations
     {
         private readonly ICatalogoDetalleRepository _repository;
         private readonly ILogger<CatalogoDetalleService> _logger;
+        private readonly IExcelService _excel;
 
-        public CatalogoDetalleService(ICatalogoDetalleRepository repository, ILogger<CatalogoDetalleService> logger)
+        public CatalogoDetalleService(ICatalogoDetalleRepository repository, ILogger<CatalogoDetalleService> logger, IExcelService excel)
         {
             _repository = repository;
             _logger = logger;
+            _excel = excel;
         }
 
         //Crear
-        public async Task<BaseResponse> AddAsync(CreateCatalogoDetalleRequest request)
+        public async Task<BaseResponse> AddAsync(CatalogoDetalleRequest request)
         {
             var response = new BaseResponse();
             try
@@ -43,7 +47,7 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Actualizar
-        public async Task<BaseResponse> UpdateAsync(int id, UpdateCatalogoDetalleRequest request)
+        public async Task<BaseResponse> UpdateAsync(int id, CatalogoDetalleRequest request)
         {
             var response = new BaseResponse();
             try
@@ -138,17 +142,19 @@ namespace Papa.Facturacion.Business.Implementations
                 var result = await _repository.ListAsync(
                         predicate: p => p.BEstado &&
                             (
-                                (string.IsNullOrEmpty(request.Filter) || p.VCodigo.Contains(request.Filter))
+                                (string.IsNullOrEmpty(request.Filter) || p.VCodigo.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.VDescripcion!.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.ICatalogoNavigation.VDescripcion!.Contains(request.Filter))
                             ),
                         selector: p => new ListCatalogoDetalleResponse
                         {
                             Id = p.IId,
-                            Catalogo = p.ICatalogoNavigation.VDescripcion!,
+                            Catalogo = p.ICatalogoNavigation.VNombre!,
                             Codigo = p.VCodigo,
                             Descripcion = p.VDescripcion,
                             FechaRegistro = p.DFechaCreacion
                         },
-                        orderBy: p => p.VCodigo,
+                        orderBy: p => p.ICatalogoNavigation.VDescripcion,
                         page: request.Page,
                         pageSize: request.Rows
                     );
@@ -190,6 +196,43 @@ namespace Papa.Facturacion.Business.Implementations
             {
                 response.IsSuccess = false;
                 response.Message = "Hubo un error al eliminar el detalle de catálogo.";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
+
+        //Exportar a Excel
+        public async Task<BaseResponse<MemoryStream>> ExportListAsync(SearchListRequest request)
+        {
+            var response = new BaseResponse<MemoryStream>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado &&
+                            (
+                                (string.IsNullOrEmpty(request.Filter) || p.VCodigo.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.VDescripcion!.Contains(request.Filter)) ||
+                                (string.IsNullOrEmpty(request.Filter) || p.ICatalogoNavigation.VDescripcion!.Contains(request.Filter))
+                            ),
+                        selector: p => new ListCatalogoDetalleResponse
+                        {
+                            Id = p.IId,
+                            Catalogo = p.ICatalogoNavigation.VNombre!,
+                            Codigo = p.VCodigo,
+                            Descripcion = p.VDescripcion,
+                            FechaRegistro = p.DFechaCreacion
+                        },
+                        orderBy: p => p.ICatalogoNavigation.VDescripcion,
+                        page: request.Page,
+                        pageSize: Constants.MaxExportRows
+                    );
+
+                response.Result = _excel.ExportExcel(result.Result, "Catálogo");
+                response.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                response.Message = "Ocurrió un error al exportar el catálog.";
                 _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
             }
             return response;

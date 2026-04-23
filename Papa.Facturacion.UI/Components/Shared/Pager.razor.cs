@@ -58,7 +58,7 @@ namespace Papa.Facturacion.UI.Components.Shared
 
         private async Task OnPreviousGroupClicked()
         {
-            if (Result.CurrentPage > MaxPageButtons)
+            if (Result!.CurrentPage > MaxPageButtons)
             {
                 Result.CurrentPage = StartPageIndex - 1;
             }
@@ -71,7 +71,7 @@ namespace Papa.Facturacion.UI.Components.Shared
 
         private async Task OnNextGroupClicked()
         {
-            if (EndPageIndex < Result.TotalPages)
+            if (EndPageIndex < Result!.TotalPages)
             {
                 Result.CurrentPage = EndPageIndex + 1;
             }

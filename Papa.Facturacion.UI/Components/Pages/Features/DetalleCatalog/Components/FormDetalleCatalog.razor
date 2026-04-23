@@ -1,0 +1,52 @@
+﻿@using Papa.Facturacion.Dto.Request.CatalogoDetalle
+@using Papa.Facturacion.Dto.Response.Catalogo
+<EditForm Model="Request" FormName="CatalogForm" OnValidSubmit="OnSave">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Catálogo</label>
+            <select class="form-select form-select-sm" @bind="Request.ICatalogo">
+                <option value="0">-Seleccione-</option>
+                @foreach (var item in ListCatalogo)
+                {
+                    <option value="@item.Id">@item.Nombre</option>
+                }
+            </select>
+            <ValidationMessage For="@(() => Request.ICatalogo)" />
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Código</label>
+            <input class="form-control form-control-sm" @bind="Request.VCodigo" />
+            <ValidationMessage For="@(() => Request.VCodigo)" />
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+            <label>Descripción</label>
+            <input class="form-control form-control-sm" @bind="Request.VDescripcion" />
+            <ValidationMessage For="@(() => Request.VDescripcion)" />
+        </div>
+    </div>
+
+    <div class="row gx-4 mt-4">
+        <div class="col">
+            <button class="btn btn-primary" type="submit"><i class=" bi bi-save"></i> Guardar</button>
+            <a class="btn btn-danger" href="@ComponentRoutes.DetalleCatalog.List">Cancelar</a>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public CatalogoDetalleRequest Request { get; set; } = new();
+
+    [Parameter]
+    public List<ListCatalogoResponse> ListCatalogo { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnSaveEvent { get; set; } = default!;
+
+    public async Task OnSave()
+    {
+        await OnSaveEvent.InvokeAsync();
+    }
+}

@@ -67,6 +67,15 @@
             <div class="menu_title" data-title="Principal"></div>
 
             <li class="item">
+                <a href="@ComponentRoutes.DetalleCatalog.List" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bi-bookmark-x"></i>
+                    </span>
+                    <span class="navlink">Catálogo</span>
+                </a>
+            </li>
+
+            <li class="item">
                 <a href="@ComponentRoutes.Clients.List" class="nav_link">
                     <span class="navlink_icon">
                         <i class="bx bx-user"></i>
@@ -93,58 +102,18 @@
                 </a>
             </li>
 
-            <li class="item">
-                <div class="nav_link submenu_item"
-                     @onclick='() => ToggleSubMenu("reportes")'>
-
-                    <span class="navlink_icon">
-                        <i class="bx bx-bar-chart"></i>
-                    </span>
-                    <span class="navlink">Reportes</span>
-                    <i class="bx bx-chevron-right @(IsMenuOpen("reportes") ? "rotated" : "")"></i>
-                </div>
-
-                <ul class="menu_items submenu"
-                    style="@(IsMenuOpen("reportes") ? "display:block;" : "display:none;")">
-
-                    <li href="/reportes/ventas" class="nav_link sublink">Ventas</li>
-                    <li href="/reportes/inventario" class="nav_link sublink">Inventario</li>
-
-                </ul>
-            </li>
         </ul>
 
-        <!-- ===== SEGURIDAD ===== -->
+        <!-- ===== Documentación ===== -->
         <ul class="menu_items">
-            <div class="menu_title" data-title="Seguridad"></div>
+            <div class="menu_title" data-title="Documentación"></div>
 
             <li class="item">
-                <a href="/roles" class="nav_link">
+                <a href="https://github.com/FredyPapa/PapaFacturacion" class="nav_link" target="_blank">
                     <span class="navlink_icon">
-                        <i class="bx bx-lock"></i>
+                        <i class="bx bi-file-code"></i>
                     </span>
-                    <span class="navlink">Roles</span>
-                </a>
-            </li>
-
-            <li class="item">
-                <a href="/permisos" class="nav_link">
-                    <span class="navlink_icon">
-                        <i class="bx bx-shield"></i>
-                    </span>
-                    <span class="navlink">Permisos</span>
-                </a>
-            </li>
-        </ul>
-
-        <!-- ===== CERRAR SESIÓN ===== -->
-        <ul class="menu_items">
-            <li class="item item-seleccionado" @onclick="CerrarSesion">
-                <a class="nav_link">
-                    <span class="navlink_icon">
-                        <i class="bx bx-log-out"></i>
-                    </span>
-                    <span class="navlink">Cerrar Sesión</span>
+                    <span class="navlink">Documentación</span>
                 </a>
             </li>
         </ul>

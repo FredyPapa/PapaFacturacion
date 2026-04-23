@@ -6,9 +6,12 @@ using Papa.Facturacion.Dto.Request;
 using Papa.Facturacion.Dto.Request.Catalogo;
 using Papa.Facturacion.Dto.Response;
 using Papa.Facturacion.Dto.Response.Catalogo;
+using Papa.Facturacion.Dto.Response.CatalogoDetalle;
+using Papa.Facturacion.Dto.Response.Cliente;
 using Papa.Facturacion.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Papa.Facturacion.Business.Implementations
@@ -25,7 +28,7 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Crear
-        public async Task<BaseResponse> AddAsync(CreateCatalogoRequest request)
+        public async Task<BaseResponse> AddAsync(CatalogoRequest request)
         {
             var response = new BaseResponse();
             try
@@ -43,7 +46,7 @@ namespace Papa.Facturacion.Business.Implementations
         }
 
         //Actualizar
-        public async Task<BaseResponse> UpdateAsync(int id, UpdateCatalogoRequest request)
+        public async Task<BaseResponse> UpdateAsync(int id, CatalogoRequest request)
         {
             var response = new BaseResponse();
             try
@@ -94,6 +97,33 @@ namespace Papa.Facturacion.Business.Implementations
             {
                 response.IsSuccess = false;
                 response.Message = "Hubo un error al obtener el catálogo";
+                _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
+            }
+            return response;
+        }
+
+        //Listar sin paginación
+        public async Task<BaseResponse<List<ListCatalogoResponse>>> ListAsync()
+        {
+            var response = new BaseResponse<List<ListCatalogoResponse>>();
+            try
+            {
+                var result = await _repository.ListAsync(
+                        predicate: p => p.BEstado,
+                        selector: p => new ListCatalogoResponse
+                        {
+                            Id = p.IId,
+                            Nombre = p.VNombre,
+                        },
+                        orderBy: p => p.VDescripcion
+                    );
+                response.IsSuccess = true;
+                response.Result = result.ToList();
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = "Hubo un error al listar los Catalogos.";
                 _logger.LogError(ex, "{0} - {1}", response.Message, ex.Message);
             }
             return response;

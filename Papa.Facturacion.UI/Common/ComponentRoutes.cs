@@ -2,6 +2,14 @@
 {
     public static class ComponentRoutes
     {
+        public static class DetalleCatalog
+        {
+            public const string List = "/maintenance/detalleCatalog";
+            public const string Create = "/maintenance/detalleCatalog/create";
+            public const string Edit = "/maintenance/detalleCatalog/edit";
+            public const string EditNav = "/maintenance/detalleCatalog/edit/{id:int}";
+        }
+
         public static class Clients
         {
             public const string List = "/maintenance/clients";

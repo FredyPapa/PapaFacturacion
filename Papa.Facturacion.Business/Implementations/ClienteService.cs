@@ -34,20 +34,6 @@ namespace Papa.Facturacion.Business.Implementations
             var response = new BaseResponse();
             try
             {
-                /*
-                var cliente = new Cliente()
-                {
-                    ITipoDocumentoCat = request.ITipoDocumentoCat,
-                    VNumeroDocumento = request.VNumeroDocumento,
-                    VApellidoPaterno = request.VApellidoPaterno,
-                    VApellidoMaterno = request.VApellidoMaterno,
-                    VNombres = request.VNombres,
-                    VDireccion = request.VDireccion,
-                    VCorreoElectronico = request.VCorreoElectronico,
-                    VCelular = request.VCelular,
-                };
-                await _repository.AddAsync(cliente);
-                */
                 await _repository.AddAsync(request.Adapt<Cliente>());
                 response.IsSuccess = true;
             }
