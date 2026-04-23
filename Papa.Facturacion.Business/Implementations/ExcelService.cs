@@ -48,7 +48,7 @@ namespace Papa.Facturacion.Business.Implementations
 
             var header = workSheet.Range(rows, 1, rows, longProperties);
             header.Style.Font.Bold = true;
-            header.Style.Fill.BackgroundColor = XLColor.LightBlue;
+            header.Style.Fill.BackgroundColor = XLColor.DarkBrown;
             header.Style.Font.FontColor = XLColor.White;
             header.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             header.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
