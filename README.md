@@ -1,7 +1,54 @@
-# Papa.Facturacion
+# Sistema de Facturación
 
-Proyecto de facturación construido con .NET 10 y Blazor Server.
-Reúne la UI en Blazor, la capa de negocio, acceso a datos con Entity Framework Core y repositorios organizados por proyecto.
+Proyecto de facturación construido con **.NET 10** y **Blazor Server** (Interactive Server render mode).
+Reúne la UI en Blazor, la capa de negocio, acceso a datos con Entity Framework Core y repositorios organizados por proyectos dedicados.
+
+## Diagrama de Arquitectura
+
+A continuación se muestra el diagrama que representa el flujo y la relación de dependencia entre las distintas capas del sistema:
+
+```mermaid
+graph TD
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:1px;
+    classDef ui fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef business fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
+    classDef repo fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef data fill:#ede7f6,stroke:#7b1fa2,stroke-width:2px;
+    classDef common fill:#eceff1,stroke:#607d8b,stroke-width:1px;
+    classDef db fill:#ffebee,stroke:#c62828,stroke-width:2px;
+
+    UI[Papa.Facturacion.UI<br/>Blazor Server UI]:::ui -->|Llama a Servicios| Business[Papa.Facturacion.Business<br/>Lógica de Negocio]:::business
+    Business -->|Usa Repositorios| Repositories[Papa.Facturacion.Repositories<br/>Abstracción & Acceso]:::repo
+    Repositories -->|Consulta DbContext| DataAccess[Papa.Facturacion.DataAccess<br/>EF Core Context]:::data
+    DataAccess -->|Persiste en| SQL[(SQL Server<br/>Puerto: 1405)]:::db
+
+    subgraph Capa Común y Modelos
+        Entities[Papa.Facturacion.Entities<br/>Entidades Dominio]:::common
+        Dto[Papa.Facturacion.Dto<br/>Requests / Responses]:::common
+        Utils[Papa.Facturacion.Utils<br/>Helpers]:::common
+    end
+
+    UI -.-> Dto
+    Business -.-> Dto
+    Repositories -.-> Dto
+    DataAccess -.-> Entities
+```
+
+## Patrones de Diseño y Arquitectura Utilizados
+
+El sistema se diseñó siguiendo buenas prácticas de desarrollo de software para plataformas empresariales, implementando los siguientes patrones:
+
+1. **Arquitectura Multicapa (Layered Architecture):**
+   * Separación física y lógica de responsabilidades. Cada capa tiene un propósito único y se comunica de manera descendente.
+2. **Patrón Repositorio (Repository Pattern):**
+   * Centraliza la lógica de acceso a datos utilizando una interfaz genérica `IBaseRepository<TEntity>` e implementaciones específicas, evitando duplicar código SQL/LINQ y facilitando la mantenibilidad y pruebas unitarias.
+3. **Inyección de Dependencias (Dependency Injection) por Convención:**
+   * Utiliza la librería **Scrutor** para escanear y registrar automáticamente en el contenedor de servicios de .NET todas las implementaciones de interfaces bajo un esquema de ciclo de vida Scoped, evitando el registro manual individual en el `Program.cs`.
+4. **Patrón DTO (Data Transfer Objects) y Mapeo:**
+   * Desacopla la lógica de almacenamiento/base de datos de la lógica de presentación. Los datos viajan a través de DTOs mapeados transparentemente hacia y desde las entidades del dominio con **Mapster**.
+5. **Code-Behind en Componentes UI:**
+   * Las vistas Razor de Blazor (ej. `CreateInvoices.razor`) se mantienen enfocadas en el marcado HTML/Bootstrap y se vinculan a clases parciales de C# (ej. `CreateInvoices.razor.cs`) donde reside la lógica de comportamiento del componente.
+
 
 ## Resumen de la arquitectura
 - UI (Blazor Server)
